@@ -61,12 +61,12 @@ class CycloneSlider_ExportPage extends CycloneSlider_WpAdminSubPage{
 		$vars['nextgen_page_url'] = $this->nextgen_page_url;
 		$vars['tabs'] = array(
 			array(
-				'title' => __('Export', 'cyclone-slider-2'),
+				'title' => __('Export', 'cycloneslider'),
 				'url' => $this->export_page_url,
 				'classes' => 'nav-tab nav-tab-active'
 			),
 			array(
-				'title' => __('Import', 'cyclone-slider-2'),
+				'title' => __('Import', 'cycloneslider'),
 				'url' => $this->import_page_url,
 				'classes' => 'nav-tab'
 			)
@@ -74,7 +74,7 @@ class CycloneSlider_ExportPage extends CycloneSlider_WpAdminSubPage{
 		$vars['page_data'] = $this->get_page_data();
 	    $vars['error'] = get_transient( 'cycloneslider_error_export');
 	    if(!class_exists('ZipArchive')){
-		    $vars['error'] = __( 'ZipArchive not supported. ZipArchive is needed for Import and Export to work.', 'cyclone-slider-2' );
+		    $vars['error'] = __( 'ZipArchive not supported. ZipArchive is needed for Import and Export to work.', 'cycloneslider' );
 	    }
 	    delete_transient( 'cycloneslider_error_export');
 
@@ -110,12 +110,12 @@ class CycloneSlider_ExportPage extends CycloneSlider_WpAdminSubPage{
 		
         $zip_file = $this->wp_content_dir.'/cyclone-slider/exports/'.$vars['page_data']['file_name'];
         
-		$vars['ok'] = __('Your export file is ready. Click Download.', 'cyclone-slider-2');
+		$vars['ok'] = __('Your export file is ready. Click Download.', 'cycloneslider');
 		try {
 			// Create exports dir
 			if( is_dir( $this->wp_content_dir.'/cyclone-slider/exports' ) == false ){
 				if( ! mkdir( $this->wp_content_dir.'/cyclone-slider/exports', 0777, true ) ){
-					throw new Exception( __('Error creating exports directory.', 'cyclone-slider-2'));
+					throw new Exception( __('Error creating exports directory.', 'cycloneslider'));
 				}
 			}
 		
@@ -164,12 +164,12 @@ class CycloneSlider_ExportPage extends CycloneSlider_WpAdminSubPage{
 		}
 		
 		if( empty( $post[$this->transient_name]['sliders']) ){
-			set_transient( 'cycloneslider_error_export', __('No slider selected.', 'cyclone-slider-2'), 60 );
+			set_transient( 'cycloneslider_error_export', __('No slider selected.', 'cycloneslider'), 60 );
 			return false;
 		}
 		
 		if( empty( $post[$this->transient_name]['file_name'] ) ){
-			set_transient( 'cycloneslider_error_export', __('Please choose a file name.', 'cyclone-slider-2'), 60 );
+			set_transient( 'cycloneslider_error_export', __('Please choose a file name.', 'cycloneslider'), 60 );
 			return false;
 		}
 		

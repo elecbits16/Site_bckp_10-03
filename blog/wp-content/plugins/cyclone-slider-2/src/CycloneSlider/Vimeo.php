@@ -16,7 +16,7 @@ class CycloneSlider_Vimeo {
     public function get_vimeo_id($url){
         
         $parsed_url = parse_url($url);
-        if ($parsed_url['host'] == 'vimeo.com'){
+        if (isset($parsed_url['host']) && $parsed_url['host'] == 'vimeo.com'){
             $vimeo_id = ltrim( $parsed_url['path'], '/');
             if (is_numeric($vimeo_id)) {
                 return $vimeo_id;

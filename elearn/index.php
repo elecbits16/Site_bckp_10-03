@@ -1,5 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+<?php
+
+session_start();
+include("../functions/functions.php");
+
+
+?>
 
 <head>
 
@@ -252,7 +259,30 @@ include("topbarl.php");
      <a href="index.php" style="text-align: left;">   <img src="../images/logo.png" width="200" ></a>
      </div>
      <div class="col-lg-3" >
-      <a href="login.php"><button class="button button4" style="font-family: 'Average Sans', sans-serif;">Sign In/Sign Up</button></a>
+
+
+
+
+<?php
+if (isset($_SESSION['customer_email'])) {
+  
+$path = "myaccount/index.php";
+$bu_name = $_SESSION['customer_email'];
+
+}
+
+else {
+  
+  $path = "login.php";
+$bu_name = "Sign In/Sign Up";
+
+
+  }
+
+?>
+ <a href= <?php echo $path; ?> <button class="button button4" style="font-family: 'Average Sans', sans-serif;">
+<?php echo $bu_name; ?>
+      </button></a>
 </div>
   </div>
 

@@ -179,3 +179,27 @@
 [11-May-2017 03:50:41 Etc/GMT] PHP Notice:  Undefined variable: product_high in /home/elecbksb/public_html/admin_area/edit_pro.php on line 255
 [11-May-2017 03:50:41 Etc/GMT] PHP Notice:  Undefined variable: product_keywords in /home/elecbksb/public_html/admin_area/edit_pro.php on line 259
 [11-May-2017 03:50:41 Etc/GMT] PHP Notice:  Undefined variable: product_where in /home/elecbksb/public_html/admin_area/edit_pro.php on line 265
+[26-Jun-2017 11:41:15 Etc/GMT] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO) in /home/elecbksb/public_html/admin_area/edit_comp.php on line 121
+[26-Jun-2017 11:41:20 Etc/GMT] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO) in /home/elecbksb/public_html/admin_area/edit_comp.php on line 121
+[26-Jun-2017 11:42:35 Etc/GMT] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO) in /home/elecbksb/public_html/admin_area/edit_comp.php on line 121
+[26-Jun-2017 11:42:49 Etc/GMT] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO) in /home/elecbksb/public_html/admin_area/edit_comp.php on line 121
+[26-Jun-2017 11:46:26 Etc/GMT] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO) in /home/elecbksb/public_html/admin_area/edit_comp.php on line 121
+[26-Jun-2017 11:46:45 Etc/GMT] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO) in /home/elecbksb/public_html/admin_area/edit_comp.php on line 121
+[04-Jul-2017 04:19:48 Etc/GMT] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in /home/elecbksb/public_html/admin_area/view_c_report.php on line 74
+[28-Aug-2017 15:03:06 Etc/GMT] PHP Notice:  Undefined variable: newFileName in /home/elecbksb/public_html/admin_area/doctest.php on line 141
+[28-Aug-2017 15:03:06 Etc/GMT] PHP Notice:  Undefined variable: insert_product in /home/elecbksb/public_html/admin_area/doctest.php on line 152
+[28-Aug-2017 15:03:21 Etc/GMT] PHP Notice:  Undefined variable: newFileName in /home/elecbksb/public_html/admin_area/doctest.php on line 141
+[09-Sep-2017 05:43:01 Etc/GMT] PHP Warning:  require_once(Classes/PHPExcel.php): failed to open stream: No such file or directory in /home/elecbksb/public_html/admin_area/clan_project.php on line 183
+[09-Sep-2017 05:43:01 Etc/GMT] PHP Fatal error:  require_once(): Failed opening required 'Classes/PHPExcel.php' (include_path='.:/opt/alt/php54/usr/share/pear:/opt/alt/php54/usr/share/php') in /home/elecbksb/public_html/admin_area/clan_project.php on line 183
+[09-Sep-2017 05:45:31 Etc/GMT] PHP Warning:  mysqli_query() expects parameter 1 to be mysqli, resource given in /home/elecbksb/public_html/admin_area/clan_project.php on line 220
+[09-Sep-2017 05:45:31 Etc/GMT] PHP Warning:  mysqli_error() expects parameter 1 to be mysqli, resource given in /home/elecbksb/public_html/admin_area/clan_project.php on line 224
+[09-Sep-2017 05:47:12 Etc/GMT] PHP Warning:  mysqli_query() expects parameter 1 to be mysqli, resource given in /home/elecbksb/public_html/admin_area/clan_project.php on line 220
+[09-Sep-2017 05:47:12 Etc/GMT] PHP Warning:  mysqli_error() expects parameter 1 to be mysqli, resource given in /home/elecbksb/public_html/admin_area/clan_project.php on line 224
+[09-Sep-2017 05:52:52 Etc/GMT] PHP Notice:  Undefined variable: newFileName in /home/elecbksb/public_html/admin_area/insert_proj_doc.php on line 139
+[09-Sep-2017 05:55:29 Etc/GMT] PHP Warning:  move_uploaded_file(design_doc/Elecbits_project_Elecbits_lfr_synopsis.doc): failed to open stream: No such file or directory in /home/elecbksb/public_html/admin_area/insert_proj_doc.php on line 119
+[09-Sep-2017 05:55:29 Etc/GMT] PHP Warning:  move_uploaded_file(): Unable to move '/tmp/phpdK5A56' to 'design_doc/Elecbits_project_Elecbits_lfr_synopsis.doc' in /home/elecbksb/public_html/admin_area/insert_proj_doc.php on line 119
+[21-Sep-2017 05:50:34 Etc/GMT] PHP Notice:  Undefined index: pass in /home/elecbksb/public_html/admin_area/invoice.php on line 7
+[02-Oct-2017 06:44:04 Etc/GMT] PHP Notice:  Undefined index: pass in /home/elecbksb/public_html/admin_area/invoice.php on line 7
+[02-Oct-2017 06:44:22 Etc/GMT] PHP Notice:  Undefined index: pass in /home/elecbksb/public_html/admin_area/invoice.php on line 7
+[03-Oct-2017 12:52:05 Etc/GMT] PHP Warning:  mysqli_query() expects parameter 1 to be mysqli, resource given in /home/elecbksb/public_html/admin_area/accept_list.php on line 68
+[03-Oct-2017 12:52:05 Etc/GMT] PHP Warning:  mysqli_fetch_array() expects parameter 1 to be mysqli_result, null given in /home/elecbksb/public_html/admin_area/accept_list.php on line 71

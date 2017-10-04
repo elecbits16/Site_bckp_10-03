@@ -101,3 +101,36 @@
 [28-Apr-2017 14:42:57 Etc/GMT] PHP Notice:  Undefined variable: post_ide in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 110
 [28-Apr-2017 14:42:58 Etc/GMT] PHP Notice:  Undefined variable: post_ide in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 110
 [01-May-2017 08:28:37 Etc/GMT] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 114
+[14-May-2017 10:53:14 Etc/GMT] PHP Notice:  Undefined variable: post_ide in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 110
+[16-May-2017 06:10:20 Etc/GMT] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 114
+[17-Jun-2017 03:46:33 Etc/GMT] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 114
+[21-Jun-2017 17:57:20 Etc/GMT] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 114
+[27-Jun-2017 10:25:52 Etc/GMT] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 114
+[28-Jun-2017 00:49:13 Etc/GMT] PHP Notice:  Undefined variable: post_ide in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 110
+[30-Jun-2017 19:46:00 Etc/GMT] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 114
+[07-Jul-2017 01:10:47 Etc/GMT] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 114
+[07-Jul-2017 09:08:45 Etc/GMT] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 114
+[07-Jul-2017 09:08:58 Etc/GMT] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 114
+[07-Jul-2017 09:08:59 Etc/GMT] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 114
+[07-Jul-2017 09:09:00 Etc/GMT] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 114
+[17-Jul-2017 08:42:54 Etc/GMT] PHP Notice:  Undefined variable: post_ide in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 110
+[19-Jul-2017 02:46:13 Etc/GMT] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 114
+[22-Jul-2017 00:21:36 Etc/GMT] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 114
+[31-Jul-2017 03:56:49 Etc/GMT] PHP Warning:  include(sidebar_c.php): failed to open stream: No such file or directory in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 151
+[31-Jul-2017 03:56:49 Etc/GMT] PHP Warning:  include(sidebar_c.php): failed to open stream: No such file or directory in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 151
+[31-Jul-2017 03:56:49 Etc/GMT] PHP Warning:  include(): Failed opening 'sidebar_c.php' for inclusion (include_path='.:/opt/alt/php54/usr/share/pear:/opt/alt/php54/usr/share/php') in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 151
+[05-Aug-2017 17:10:47 Etc/GMT] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 105
+[28-Aug-2017 05:59:21 Etc/GMT] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 105
+[28-Aug-2017 06:38:41 Etc/GMT] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 105
+[31-Aug-2017 09:18:25 Etc/GMT] PHP Notice:  Undefined variable: post_ide in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 101
+[04-Sep-2017 17:55:29 Etc/GMT] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 105
+[04-Sep-2017 21:01:17 Etc/GMT] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 105
+[07-Sep-2017 22:25:56 Etc/GMT] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 105
+[08-Sep-2017 21:58:23 Etc/GMT] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 105
+[08-Sep-2017 21:58:31 Etc/GMT] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 105
+[12-Sep-2017 14:08:19 Etc/GMT] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 105
+[15-Sep-2017 04:54:37 Etc/GMT] PHP Notice:  Undefined variable: post_ide in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 101
+[15-Sep-2017 04:54:38 Etc/GMT] PHP Notice:  Undefined variable: post_ide in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 101
+[22-Sep-2017 22:54:23 Etc/GMT] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 105
+[24-Sep-2017 04:08:01 Etc/GMT] PHP Notice:  Undefined variable: post_ide in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 101
+[26-Sep-2017 15:18:18 Etc/GMT] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in /home/elecbksb/public_html/thelazyprogrammer.info/post.php on line 105

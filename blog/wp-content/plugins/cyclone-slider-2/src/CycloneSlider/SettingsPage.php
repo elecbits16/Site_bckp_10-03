@@ -48,7 +48,7 @@ class CycloneSlider_SettingsPage extends CycloneSlider_WpSubPage {
 		
 		if( isset($_POST['reset']) ){
 			$input = $this->data->get_default_settings_page_data();
-			add_settings_error( $this->settings_page_properties['menu_slug'], 'restore_defaults', __( 'Default options restored.', 'cyclone-slider-2' ), 'updated fade' );
+			add_settings_error( $this->settings_page_properties['menu_slug'], 'restore_defaults', __( 'Default options restored.', 'cycloneslider' ), 'updated fade' );
 		}
 		return $input;
 	}

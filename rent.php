@@ -128,11 +128,11 @@ include("public/menubar.php");
                <label for="sectional-text-2">Your location</label>
                     <select name="location" >
                       <option selected="selected" >Your Location</option>
-                      <option >New Delhi</option>
-                      <option >Noida</option>
-                      <option >Gurgaon</option>
-                                            <option value="us">Ghaziabad</option>
-                                            <option value="us">Outside NCR</option>
+                      <option value="New Delhi" >New Delhi</option>
+                      <option value="Noida" >Noida</option>
+                      <option value="Gurgaon">Gurgaon</option>
+                                            <option value="Ghaziabad">Ghaziabad</option>
+                                            <option value="NCR">Outside NCR</option>
                     </select>
                     <span></span>
                 
@@ -446,7 +446,7 @@ $yourdetails = "$name $location $email $phone $gender $address";
 $projdetails = "$cat $project $devd $pickl $otherd $plan";
 
 $send = "$yourdetails $projdetails";
-$from = "From: Techsupport@elecbits.in";
+$from = "From: Rent@elecbits.in";
 
 
 

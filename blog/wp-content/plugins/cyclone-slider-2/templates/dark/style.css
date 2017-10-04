@@ -47,12 +47,10 @@
 .cycloneslider-template-dark .cycloneslider-slide-vimeo{
 	background: #000;
 }
-.cycloneslider-template-dark .cycloneslider-slide-custom,
-.cycloneslider-template-dark .cycloneslider-slide-testimonial{
+.cycloneslider-template-dark .cycloneslider-slide-custom{
 	min-height: 100%;
 }
-.cycloneslider-template-dark div[data-cycle-dynamic-height="on"] .cycloneslider-slide-custom,
-.cycloneslider-template-dark div[data-cycle-dynamic-height="on"] .cycle-sentinel + .cycloneslider-slide-testimonial{
+.cycloneslider-template-dark div[data-cycle-dynamic-height="on"] .cycloneslider-slide-custom {
 	min-height: 100px; /* Disable 100% min height when dynamic height is on. To fix issue with scrollHorz */
 }
 .cycloneslider-template-dark .cycloneslider-slide-testimonial{

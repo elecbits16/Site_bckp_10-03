@@ -276,6 +276,29 @@ But little bit i fill experience it can made little cost effective.  <br>
                 </div>
 
 
+  <div class="testimonial">
+                    <div class="pic">
+                        <img src="images/testimonials/008.jpg" alt="">
+                    </div>
+                    <div class="testimonial-content">
+                        <p class="description">
+                           Fastest delivery i could have..!! <br>
+                           <img src="images/star_img.png" width="20" height="20">
+                            <img src="images/star_img.png" width="20" height="20">
+                             <img src="images/star_img.png" width="20" height="20">
+                             <img src="images/star_img.png" width="20" height="20">
+                             <img src="images/star_img.png" width="20" height="20">
+                             
+                        </p>
+                        <h3 class="testimonial-title">Shikha Singh </h3>
+                        <small class="post">BI developer</small>
+                    </div>
+
+                </div>
+
+
+                       
+
 
 
 

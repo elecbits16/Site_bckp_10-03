@@ -1,17 +1,5 @@
 <?php
-/**
- * Cyclone Slider
- *
- * Displays the slider on template files.
- *
- * @param string $slider_slug The slug of the slider.
- */
-function cyclone_slider( $slider_slug ){
-	global $cyclone_slider_plugin_instance;
-	if(isset($cyclone_slider_plugin_instance)){
-		echo $cyclone_slider_plugin_instance['frontend']->cycloneslider_shortcode( array('id'=>$slider_slug) );
-	}
-}
+
 
 /**
 * Print with a twist

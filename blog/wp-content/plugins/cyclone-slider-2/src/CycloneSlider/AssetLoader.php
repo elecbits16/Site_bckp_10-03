@@ -49,9 +49,6 @@ class CycloneSlider_AssetLoader {
 			// Required media files for new media manager. Since WP 3.5+
 			wp_enqueue_media();
 			
-			// Fontawesome style
-			wp_enqueue_style( 'font-awesome', $this->url.'libs/font-awesome/css/font-awesome.min.css', array(), $this->version );
-			
 			// Main style
 			wp_enqueue_style( 'cycloneslider-admin-styles', $this->url.'css/admin.css', array(), $this->version  );
 			
@@ -68,11 +65,11 @@ class CycloneSlider_AssetLoader {
 			wp_register_script( 'cycloneslider-admin-script', $this->url.'js/admin.js', array('jquery'), $this->version  );
 			wp_localize_script( 'cycloneslider-admin-script', 'cycloneslider_admin_vars',
 				array(
-					'title'     => __( 'Select an image', 'cyclone-slider-2' ), // This will be used as the default title
-					'title2'     => __( 'Select Images - Use Ctrl + Click or Shift + Click', 'cyclone-slider-2' ),
-					'button'    => __( 'Add to Slide', 'cyclone-slider-2' ), // This will be used as the default button text
-					'button2'    => __( 'Add Images as Slides', 'cyclone-slider-2' ),
-					'youtube_url_error'    => __( 'Error. Make sure its a valid YouTube URL.', 'cyclone-slider-2' )
+					'title'     => __( 'Select an image', 'cycloneslider' ), // This will be used as the default title
+					'title2'     => __( 'Select Images - Use Ctrl + Click or Shift + Click', 'cycloneslider' ),
+					'button'    => __( 'Add to Slide', 'cycloneslider' ), // This will be used as the default button text
+					'button2'    => __( 'Add Images as Slides', 'cycloneslider' ),
+					'youtube_url_error'    => __( 'Error. Make sure its a valid YouTube URL.', 'cycloneslider' )
 				)
 			);
 			wp_enqueue_script( 'cycloneslider-admin-script');
@@ -144,7 +141,10 @@ class CycloneSlider_AssetLoader {
 		
 		/*** Templates Scripts ***/
 		$this->enqueue_templates_scripts();
-		
+
+		/*** Vimeo JS API ***/
+		wp_enqueue_script( 'vimeo-player-js', $this->url.'libs/vimeo-player-js/player.js', array(), $this->version, $in_footer );
+
 		/*** Client Script ***/
 		wp_enqueue_script( 'cyclone-client', $this->url.'js/client.js', array('jquery'), $this->version, $in_footer );
 

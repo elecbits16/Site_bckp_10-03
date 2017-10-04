@@ -37,7 +37,9 @@ class CycloneSlider_View {
 	* @return void on success string "Not found $view_file" on fail
 	*/
 	public function render($file, $vars = array()){
+		$vars = apply_filters('cycloneslider_pre_render_view_vars', $vars);
 		$view_file = $this->right_sep($this->view_folder).$file; // Add directory separator if needed
+		$view_file = apply_filters('cycloneslider_pre_render_view_file', $view_file);
 		if(@file_exists($view_file)){
 			if(!empty($vars)){
 				extract($vars, EXTR_SKIP); // Extract variables

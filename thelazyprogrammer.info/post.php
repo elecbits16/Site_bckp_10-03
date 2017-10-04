@@ -95,15 +95,6 @@ include("menu.php");
 
 
 
-<?php
-
-include("sidebar.php");
-
-?>
-
-
-
-
 
 <?php
 
@@ -137,8 +128,50 @@ $author_image = $row_post['author_image'];
 
 $author_bio = $row_post['author_bio'];
 
+$m_category = $row_post['m_category'];
+
+
 
 ?>
+
+
+
+
+
+
+
+
+
+
+<?php
+
+
+if ($m_category == 'C')
+{
+  include("sidebar_c.php");  
+}
+
+if ($m_category == 'C++')
+{
+  include("sidebar_cplus.php");  
+}
+
+if ($m_category == 'Java')
+{
+  include("sidebar_java.php");  
+}
+
+if ($m_category == 'Android')
+{
+  include("sidebar_android.php");  
+}
+
+?>
+
+
+
+
+
 
 
 <div class="hidden-lg">

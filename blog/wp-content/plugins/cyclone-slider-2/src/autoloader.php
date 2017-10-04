@@ -1,6 +1,6 @@
 <?php
 // Autoloader
-function cycloneslider_autoloader( $class_name ) {
+function cs3_autoloader( $class_name ) {
 	if ( 0 === strpos( $class_name, 'CycloneSlider' ) ) {
 
 		$class_name = str_replace( '\\', '/', $class_name ); // for 5.3 namespaces, replace \ with / to work with linux.
@@ -11,4 +11,4 @@ function cycloneslider_autoloader( $class_name ) {
 	}
 }
 
-spl_autoload_register( 'cycloneslider_autoloader' );
+spl_autoload_register( 'cs3_autoloader' );

@@ -30,7 +30,7 @@ function CsUiOpen(data){
     if(!data){
         data = {};
     }
-    this.expandables = data;/*** data format should be object[slideshow_id][element_index] ***/
+    this.expandables = data;/*** data format should be object[slideshowId][element_index] ***/
 }
 CsUiOpen.prototype.get = function(slideshow, key){
     if(this.expandables[slideshow]!=undefined){
@@ -76,21 +76,22 @@ jQuery(document).ready(function($){
     })();
     /*** SLIDE BOXES ***/
     (function() {
-        var slideshow_id, cs_ui_open;
-        
-        slideshow_id = $('#cyclone-slides-metabox .cs-sortables').data('post-id');
+        var $slidesMetabox = $('#cyclone-slides-metabox'),
+            $sortables = $('#cs-sortables'),
+            slideshowId = $sortables.data('post-id'), 
+            cs_ui_open;
         
         cs_ui_open = new CsUiOpen(cs_local_storage.get('cs_slide_toggles'));/*** Handle persistent slide data ***/
         
         /*** Init - Sortable slides ***/
-        $('.cs-sortables').sortable({
+        $sortables.sortable({
             handle:'.cs-header',
             placeholder: "cs-slide-placeholder",
             forcePlaceholderSize:true,
-            delay:100,
+            disabled: true,
             /*** Update form field indexes when slide order changes ***/
             update: function(event, ui) {
-                $('.cs-sortables .cs-slide').each(function(boxIndex, box){ /*** Loop thru each box ***/
+                $sortables.find('.cs-slide').each(function(boxIndex, box){ /*** Loop thru each box ***/
                     $(box).find('input, select, textarea').each(function(i, field){ /*** Loop thru relevant form fields ***/
                         var name = $(field).attr('name');
                         if(name){
@@ -113,34 +114,44 @@ jQuery(document).ready(function($){
                 });
             }
         });
-        
-        /*** Init - Slide ID and title ***/
-        $('.cs-sortables .cs-slide').each(function(i){
-            var body;
-            
-            body = $(this).find('.cs-body');
+        $('#cs-sort').on('click', function(){
+            var $sort = $(this),
+                isDisabled = $( "#cs-sortables" ).sortable( "option", "disabled" );
 
-            $(this).data('cs_id',i);
-            
-            if(cs_ui_open.get(slideshow_id ,i)=='open'){
-                body.slideDown(0);
+            $sort.toggleClass('active');
+            if(isDisabled){
+                $('#cs-sortables').sortable('enable').addClass('active');
             } else {
-                body.slideUp(0);
+                $('#cs-sortables').sortable('disable').removeClass('active');
+            }
+        });
+        /*** Init - Slide ID and title ***/
+        $sortables.find('.cs-slide').each(function(i){
+            var $slide = $(this),
+                $body = $slide.find('.cs-body');
+
+            $slide.data('cs_id', i);
+            
+            if(cs_ui_open.get(slideshowId ,i)=='open'){
+                $body.slideDown(0);
+            } else {
+                $body.slideUp(0);
             }
         });
         
         /*** Add - Slide box from a hidden html template ***/
-        $('#cyclone-slides-metabox').on('click', '.cs-add-slide', function(e){
-            var id = $('.cs-sortables .cs-slide').length;
-            var html = $('.cs-slide-skeleton').html();
+        $slidesMetabox.on('click', '#cs-add-slide', function(e){
+            var id = $sortables.find('.cs-slide').length;
+            var html = $('#cs-slide-skeleton').html();
             html = html.replace(/{id}/g, id);/*** replace all occurences of {id} to real id ***/
             
-            $('.cs-sortables').append(html);
-            $('.cs-sortables .cs-slide:last').find('.cs-thumbnail').hide().end().find('.cs-body').show();
+            $sortables.append(html);
+            $sortables.find('.cs-slide:last').find('.cs-thumbnail').hide().end().find('.cs-body').show();
 
-            $('.cs-sortables .cs-slide').each(function(i){
+            $sortables.find('.cs-slide').each(function(i){
                 $(this).data('cs_id',i);
             });
+
             $('.expandable-body').each(function(i){
                 $(this).data('cs_id',i);
             });
@@ -148,76 +159,95 @@ jQuery(document).ready(function($){
             $(".cycloneslider_metas_enable_slide_effects").trigger('change');
             
             e.preventDefault();
-        });
-        
-        /*** Add image to slide ***/
-        $('#cyclone-slides-metabox').on('wpAddImage', '.cs-media-gallery-show', function(e, image_url, attachment_id, media_attachment){
-            var current_slide_box, slide_thumb, slide_attachment_id;
-
-            current_slide_box = $(this).parents('.cs-slide');/*** Get current box ***/
-            slide_thumb = current_slide_box.find('.cs-image-thumb');/*** Find the thumb ***/
-            slide_attachment_id = current_slide_box.find('.cs-image-id ');/*** Find the hidden field that will hold the attachment id ***/
+        })
+        .on('wpAddImage', '.cs-media-gallery-show', function(e, image_url, attachment_id, media_attachment){
             
-            slide_thumb.html('<a target="_blank" href="'+media_attachment.url+'"><img src="'+image_url+'" alt="thumb"></a>').show();
-            slide_attachment_id.val(attachment_id);
+            /*** Add image to slide ***/
+
+            var $button = $(this),
+                $imageField = $button.closest('.cs-image-field'), // Current image field
+                $thumb = $imageField.find('.cs-image-thumb'), // Find the thumb
+                $hiddenField = $imageField.find('.cs-image-id '); // Find the hidden field that will hold the attachment id
+
+            $thumb.html('<img src="'+image_url+'" alt="Thumbnail" />').show();
+            $hiddenField.val(attachment_id);
  
-        });
-        
-        /*** Add multiple images as slide ***/
-        $('#cyclone-slides-metabox').on('wpAddImages', '.cs-multiple-slides', function(e, media_attachments){
-            var cur_slide_count = $('.cs-sortables .cs-slide').length;
+        })
+        .on('wpAddImages', '.cs-multiple-slides', function(e, media_attachments){ 
+
+            /*** Add multiple images as slide ***/
+
+            var $sortables = $('#cs-sortables'),
+                slideCount = $sortables.find('.cs-slide').length,
+                i;
 
             for(i=0; i<media_attachments.length; ++i){
                 
-                $('#cyclone-slides-metabox .cs-add-slide').trigger('click');
+                $('#cs-add-slide').trigger('click');
                 
-                $('.cs-sortables .cs-slide').eq(cur_slide_count+i).find('.cs-media-gallery-show').trigger('wpAddImage', [media_attachments[i].url, media_attachments[i].id, media_attachments[i]]);
+                $sortables.find('.cs-slide').eq(slideCount+i).find('.cs-media-gallery-show').trigger('wpAddImage', [media_attachments[i].url, media_attachments[i].id, media_attachments[i]]);
             }
             
-        });
-        
-        /*** Toggle - slide body visiblity ***/
-        $('#cyclone-slides-metabox').on('click',  '.cs-header', function(e) {
-            var id, box, body, cs_slide_toggles;
+        })
+        .on('click',  '.cs-minimize', function(e) {
+
+            /*** Toggle - slide body visiblity ***/
+
+            var $button = $(this),
+                $box = $button.closest('.cs-slide'),
+                $body = $box.find('.cs-body'),
+                id = $box.data('cs_id');
             
-            box = $(this).parents('.cs-slide');
-            body = box.find('.cs-body');
-            
-            id = box.data('cs_id');
-            
-            if(body.is(':visible')){
-                body.slideUp(100);
-                cs_ui_open.remove(slideshow_id , id);
+            if($body.is(':visible')){
+                $body.slideUp(100);
+                cs_ui_open.remove(slideshowId , id);
             } else {
-                body.slideDown(100);
-                cs_ui_open.set(slideshow_id , id, 'open');/*** remember open section ***/ 
+                $body.slideDown(100);
+                cs_ui_open.set(slideshowId , id, 'open');/*** remember open section ***/ 
             }
             
             cs_local_storage.set('cs_slide_toggles', cs_ui_open.getAll());
-        });
-        
-        /*** Delete - Remove slide box ***/
-        $('#cyclone-slides-metabox').on('click',  '.cs-delete', function(e) {
+            e.preventDefault();
+
+        }).on('click', '.cs-slide-type .switcher', function(e){
+
+            /* Switcher - switch between slide types */
+
+            var $switcher = $(this);
+
+            $switcher.toggleClass('open');
+            $('.cs-slide-type .switcher').not($switcher).removeClass('open');
+            e.stopPropagation();
+
+        }).on('click', '.cs-slide-type .switcher li', function(e){
+
+            var $list = $(this),
+                $box = $list.closest('.cs-slide'),
+                $switcher = $list.closest('.switcher'),
+                $hidden = $list.closest('.cs-slide-type').find('input'),
+                $display = $switcher.find('.display');
+            
+            $display.html($list.html());
+            $switcher.removeClass('open');
+            $hidden.val($list.attr('data-value'));
+            $box.attr('data-slide-type', $hidden.val());
+
+            e.stopPropagation();
+        })
+        .on('click',  '.cs-delete', function(e) {
+            
+            /*** Delete - Remove slide box ***/
 
             var box = $(this).parents('.cs-slide');
             box.fadeOut('slow', function(){ box.remove()});
 
             e.preventDefault();
             e.stopPropagation();
-        });
-        
-        /*** Switcher - switch between slide types ***/
-        $('#cyclone-slides-metabox').on('change', '.cs-slide-type-switcher', function(e){
-            var box, body, image_box, video_box, custom_box, icon;
+        })
+        .on('change', '.cycloneslider_metas_link_target', function(e){
+
+            /*** Enable/Disable Link URL if lightbox is selected ***/
             
-            box = $(this).parents('.cs-slide');
-            box.attr('data-slide-type', $(this).val());
-            
-        });
-        $('.cs-slide-type-switcher').trigger('change');
-        
-        /*** Enable/Disable Link URL if lightbox is selected ***/
-        $('#cyclone-slides-metabox').on('change', '.cycloneslider_metas_link_target', function(e){
             var box, link_url;
             
             box = $(this).parents('.expandable-box');
@@ -229,24 +259,37 @@ jQuery(document).ready(function($){
             } else {
                 link_url.removeAttr('disabled');
             }
+        })
+        .find('.cs-slide').each(function(){
+            var $slide = $(this),
+                slideType = $slide.attr('data-slide-type');
+            $slide.find('.cs-slide-type').find('li[data-value="'+slideType+'"]').trigger('click');
         });
+
+        $(document).click(function(){
+
+            /* Handle closing of dropdown on lost focus */
+
+            $('.cs-slide-type .switcher').removeClass('open');
+        });
+
         $('.cycloneslider_metas_link_target').trigger('change');
         
     })();
     
     /*** EXPANDABLES ***/
     (function() {
-        var slideshow_id, cs_ui_open;
+        var slideshowId, cs_ui_open;
         
         /*** Init ***/
-        slideshow_id = $('#cyclone-slides-metabox .cs-sortables').data('post-id');
+        slideshowId = $('#cyclone-slides-metabox .cs-sortables').data('post-id');
         
         cs_ui_open = new CsUiOpen(cs_local_storage.get('cs_expandables'));
         
         $('#cyclone-slides-metabox .expandable-body').each(function(i){
             $(this).data('cs_id', i);
             
-            if(cs_ui_open.get(slideshow_id ,i)=='open'){
+            if(cs_ui_open.get(slideshowId ,i)=='open'){
                 $(this).slideDown(0);
             } else {
                 $(this).slideUp(0);
@@ -262,11 +305,11 @@ jQuery(document).ready(function($){
             
             if(body.is(':visible')){
                 body.slideUp(100);
-                cs_ui_open.remove(slideshow_id , id);
+                cs_ui_open.remove(slideshowId , id);
                 
             } else {
                 body.slideDown(100);
-                cs_ui_open.set(slideshow_id , id, 'open');
+                cs_ui_open.set(slideshowId , id, 'open');
                 
             }
             
@@ -276,9 +319,9 @@ jQuery(document).ready(function($){
     
     /*** VIDEO SLIDE ***/
     (function() {
-        var slideshow_id;
+        var slideshowId;
         
-        slideshow_id = $('#cyclone-slides-metabox .cs-sortables').data('post-id');
+        slideshowId = $('#cyclone-slides-metabox .cs-sortables').data('post-id');
         
         /*** Get Video ***/
         $('#cyclone-slides-metabox').on('click', '.cs-video-get', function(e){
@@ -331,12 +374,7 @@ jQuery(document).ready(function($){
         $('#pts_post_type').html('<option value="cycloneslider">Cycloneslider</option>');
         
         /*** Template Chooser ***/
-        $('#cyclone-slider-templates-metabox').on('click', '.cs-templates li', function(e){
-            $('.cs-templates li').removeClass('active');
-            $('.cs-templates li input').removeAttr('checked');
-            $(this).addClass('active').find('input').attr('checked','checked');
-        });
-        $('#cyclone-slider-templates-metabox').on('click', '.body .cs-location a', function(e){
+        $('#cyclone-slider-templates-metabox').on('click', '.boxxy', function(e){
             e.preventDefault();
             e.stopPropagation();
             
@@ -366,6 +404,13 @@ jQuery(document).ready(function($){
                 'left': x+'px',
                 'top': y+'px'
             });
+        }).on('change', '.cs-templates input[type="radio"]', function(e){
+            var $radio = $(this),
+                $tr = $(this).closest('tr'),
+                $table = $tr.closest('table');
+
+            $table.find('tr').removeClass('active');
+            $tr.addClass('active');
         });
         $(document).on('click', '#cs-boxy', function(e){
             e.preventDefault();
@@ -390,25 +435,16 @@ jQuery(document).ready(function($){
         
         /*** Show/hide Tile Properties for slides ***/
         $('#cyclone-slides-metabox').on('change', '.cycloneslider_metas_fx', function(){
-            if($(this).val()=='tileBlind' || $(this).val()=='tileSlide'){
-                $(this).siblings('.cycloneslider-slide-tile-properties').slideDown('fast');
+            var $select  = $(this),
+                $field = $select.closest('.field');
+
+            if($select.val()=='tileBlind' || $select.val()=='tileSlide'){
+                $field.siblings('.cycloneslider-slide-tile-properties').slideDown('fast');
             } else {
-                $(this).siblings('.cycloneslider-slide-tile-properties').slideUp('fast');
+                $field.siblings('.cycloneslider-slide-tile-properties').slideUp('fast');
             }
         });
         $(".cycloneslider_metas_fx").trigger('change');
-        
-        /*** enable/disable form fields and labels ***/
-        $('#cyclone-slides-metabox').on('change', '.cycloneslider_metas_enable_slide_effects', function(){
-            if($(this).val()==0){
-                $(this).parent().find('input,select').not(this).attr('disabled','disabled');
-                $(this).parent().find('label,.note').addClass('disabled');
-            } else {
-                $(this).parent().find('input,select').not(this).removeAttr('disabled');
-                $(this).parent().find('label,.note').removeClass('disabled');
-            }
-        });
-        $(".cycloneslider_metas_enable_slide_effects").trigger('change');
         
     })();
 

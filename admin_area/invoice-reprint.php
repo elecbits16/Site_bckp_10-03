@@ -55,7 +55,7 @@ $Price9 = $broken_prices[8];
 $Price10 = $broken_prices[9];
 
 
-$msg = "$c_name,  $c_mail, $c_phone , $discount, $total_comb,($Item1 = $Price1) , ($Item2 = $Price2) , ($Item3 = $Price3) , ($Item4 = $Price4) , ($Item5 = $Price5) , ($Item6 = $Price6) , ($Item7 = $Price7) , ($Item8 = $Price8) , ($Item9 = $Price9) , ($Item10 = $Price10) 
+/*$msg = "$c_name,  $c_mail, $c_phone , $discount, $total_comb,($Item1 = $Price1) , ($Item2 = $Price2) , ($Item3 = $Price3) , ($Item4 = $Price4) , ($Item5 = $Price5) , ($Item6 = $Price6) , ($Item7 = $Price7) , ($Item8 = $Price8) , ($Item9 = $Price9) , ($Item10 = $Price10) 
  ";
 
  $from= "from: Invoice_Elecbits@elecbits.in";
@@ -66,7 +66,7 @@ if( mail("saurav.rav67@gmail.com", "Invoice", $msg, $from) && mail("elecbits16@g
           echo "<script>alert('Your response has been added. Your response is important to us.')</script>";  
    }  
 
-
+*/
 
 
 

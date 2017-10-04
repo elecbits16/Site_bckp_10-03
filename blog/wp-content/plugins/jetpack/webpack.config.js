@@ -29,7 +29,6 @@ var webpackConfig = {
 		path: path.join( __dirname, '_inc/build' ),
 		filename: "[name].js"
 	},
-	devtool: '#source-map',
 	module: {
 
 		// Webpack loaders are applied when a resource is matches the test case
@@ -61,6 +60,10 @@ var webpackConfig = {
 			{
 				test: /\.scss$/,
 				loader: ExtractTextPlugin.extract( 'style-loader', 'css!sass' )
+			},
+			{
+				test: /\.svg/,
+				loader: 'url-loader'
 			}
 		]
 	},
@@ -90,21 +93,23 @@ var webpackConfig = {
 
 			// NODE_ENV is used inside React to enable/disable features that should only
 			// be used in development
-			'process.env': {
-				NODE_ENV: JSON.stringify( NODE_ENV )
-			}
+			'process.env.NODE_ENV': JSON.stringify( NODE_ENV )
 		}),
 		new ExtractTextPlugin( '[name].dops-style.css' )
-	]
+	],
+	externals: {
+		'react/addons': true,
+		'react/lib/ExecutionEnvironment': true,
+		'react/lib/ReactContext': true,
+		jsdom: 'window'
+	}
 };
 
 if ( NODE_ENV === 'production' ) {
 
 	webpack.DefinePlugin( {
-		"process.env": {
-			// This has effect on the react lib size
-			"NODE_ENV": JSON.stringify(process.env.NODE_ENV) // TODO switch depending on actual environment
-		}
+		// This has effect on the react lib size
+		'process.env.NODE_ENV': JSON.stringify( process.env.NODE_ENV ) // TODO switch depending on actual environment
 	} );
 }
 

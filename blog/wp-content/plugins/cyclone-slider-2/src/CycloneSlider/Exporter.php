@@ -49,7 +49,7 @@ class CycloneSlider_Exporter {
 		
 		// Check selected sliders
 		if( empty($sliders_slugs_array) ){
-			throw new Exception( __('Error no sliders selected.', 'cyclone-slider-2'), 1);
+			throw new Exception( __('Error no sliders selected.', 'cycloneslider'), 1);
 		}
 		
 		// Generate sliders export data
@@ -70,13 +70,13 @@ class CycloneSlider_Exporter {
 		// Generate JSON
 		$export_json = json_encode( $export_data );
 		if( false === $export_json ){
-			throw new Exception( __('Error encoding data to JSON.', 'cyclone-slider-2'), 1);
+			throw new Exception( __('Error encoding data to JSON.', 'cycloneslider'), 1);
 		}
 		
 		// Generate Zip
 		$this->generate_export_zip( $zip_file, $images_list, $export_json );
 		
-		$this->add_ok( sprintf( __('Success generating zip %s.', 'cyclone-slider-2'), wp_basename($zip_file) ) );
+		$this->add_ok( sprintf( __('Success generating zip %s.', 'cycloneslider'), wp_basename($zip_file) ) );
 		
 		return true;
 	}
@@ -101,14 +101,14 @@ class CycloneSlider_Exporter {
 			
 			if($slider){
 				$sliders_export_data[$i] = array(
-					'title' => $slider['post_title'],
-					'name' => $slider['post_name'],
+					'title' => $slider['title'],
+					'name' => $slider['name'],
 					'slider_settings' => $slider['slider_settings'],
 					'slides' => $slider['slides']
 				);
-				$this->add_ok( sprintf( __('Exporting data for slider "%s".', 'cyclone-slider-2'), $slider_slug) );
+				$this->add_ok( sprintf( __('Exporting data for slider "%s".', 'cycloneslider'), $slider_slug) );
 			} else {
-				throw new Exception( sprintf( __('Slider "%s" not found.', 'cyclone-slider-2'), $slider_slug), 3);
+				throw new Exception( sprintf( __('Slider "%s" not found.', 'cycloneslider'), $slider_slug), 3);
 			}
 		}
 		return $sliders_export_data;
@@ -135,7 +135,7 @@ class CycloneSlider_Exporter {
 					if( is_file( $file ) ){ // Check existence
 						$images_list[ $slider['name'] ][ $i ] = $file;
 					} else {
-						throw new Exception( sprintf( __('Image %1$d was not found on slide %2$d of slider %3$s. Path to image is %4$s.', 'cyclone-slider-2' ), $slide['id'], (int)$i+1, $slider['name'], $file ), 4 );
+						throw new Exception( sprintf( __('Image %1$d was not found on slide %2$d of slider %3$s. Path to image is %4$s.', 'cycloneslider' ), $slide['id'], (int)$i+1, $slider['name'], $file ), 4 );
 					}
 				}
 			}
@@ -179,13 +179,13 @@ class CycloneSlider_Exporter {
 	private function generate_export_zip( $zip_file, array $images_list, $export_json ) {     
 
 		if( !class_exists('ZipArchive') ) {
-			throw new Exception( __( 'ZipArchive not supported.', 'cyclone-slider-2' ) );
+			throw new Exception( __( 'ZipArchive not supported.', 'cycloneslider' ) );
 		}
 		$zip_archive_class_name = $this->zip_archive;
 		$zip = new $zip_archive_class_name();
 		$result = $zip->open( $zip_file, ZipArchive::CREATE | ZipArchive::OVERWRITE );
 		if ( true !== $result ) {
-			throw new Exception( sprintf( __( 'Error opening zip file %s. Code: %s', 'cyclone-slider-2' ), $zip_file, $result ) );
+			throw new Exception( sprintf( __( 'Error opening zip file %s. Code: %s', 'cycloneslider' ), $zip_file, $result ) );
 		}
 		
 		// Add slide images
@@ -194,9 +194,9 @@ class CycloneSlider_Exporter {
 				if(!empty($image_file)){ // Non image slides
 					$filename = sanitize_file_name( wp_basename( $image_file ) );
 					if( $zip->addFile( $image_file, $filename ) === false ){
-						throw new Exception( sprintf( __( 'Error adding file %s to zip.', 'cyclone-slider-2' ), $image_file ) );
+						throw new Exception( sprintf( __( 'Error adding file %s to zip.', 'cycloneslider' ), $image_file ) );
 					} else {
-						$this->add_ok( sprintf( __('File %s added to zip.', 'cyclone-slider-2'), wp_basename($image_file) ) );
+						$this->add_ok( sprintf( __('File %s added to zip.', 'cycloneslider'), wp_basename($image_file) ) );
 					}
 				}
 			}
@@ -204,7 +204,7 @@ class CycloneSlider_Exporter {
 		
 		// Add json file
 		$zip->addFromString($this->export_json_file, $export_json );
-		$this->add_ok( sprintf( __('File %s added to zip.', 'cyclone-slider-2' ), $this->export_json_file) );
+		$this->add_ok( sprintf( __('File %s added to zip.', 'cycloneslider' ), $this->export_json_file) );
 		
 		$zip->close();
 		return $zip_file;

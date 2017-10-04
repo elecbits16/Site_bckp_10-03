@@ -1443,7 +1443,7 @@ $yourdetails = "$pro_title $name $location $email $phone $gender $address";
 $projdetails = "$cat $devd $pickl $otherd $plan";
 
 $send = "$yourdetails $projdetails";
-$from = "From: Techsupport@elecbits.in";
+$from = "From: Rent@elecbits.in";
 
 
 

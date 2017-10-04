@@ -1,2 +1,0 @@
-[05-Feb-2017 05:50:37 Etc/GMT] PHP Warning:  mysqli_query() expects parameter 1 to be mysqli, resource given in /home/elecbksb/public_html/elearn/myaccount/index.php on line 75
-[05-Feb-2017 05:50:37 Etc/GMT] PHP Warning:  mysqli_fetch_array() expects parameter 1 to be mysqli_result, null given in /home/elecbksb/public_html/elearn/myaccount/index.php on line 77

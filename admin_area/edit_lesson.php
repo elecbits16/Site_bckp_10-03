@@ -29,6 +29,7 @@ $run_pro = mysql_query($get_pro,  $con);
    $lesson_compo = $row_pro['lesson_compo'];
    $lesson_aim= $row_pro['lesson_aim'];  
    $lesson_inst = $row_pro['lesson_inst'];
+   $lesson_code = $row_pro['lesson_code'];
    $lesson_quiz_id = $row_pro['lesson_quiz_id'];
    $points= $row_pro['points'];
    
@@ -124,6 +125,10 @@ $run_pro = mysql_query($get_pro,  $con);
     <td> <textarea name="lesson_inst"   cols="20" rows="10"><?php echo $lesson_inst; ?></textarea> </td> 
   </tr>
 
+   <tr>
+      <td>Lesson Code :</td>
+    <td> <textarea name="lesson_code"   cols="20" rows="10"><?php echo $lesson_code; ?></textarea> </td> 
+  </tr>
 
    <tr>
       <td>Lesson Quiz ID :</td>
@@ -171,6 +176,8 @@ if ( (isset($_POST['update_post'])) ) {
    $lesson_aims = $_POST['lesson_aim'];
     $lesson_compos = $_POST['lesson_compo'];
    $lesson_insts= $_POST['lesson_inst'];  
+   $lesson_code= $_POST['lesson_code'];  
+
    $lesson_quiz_ids = $_POST['lesson_quiz_id'];
    $pointss = $_POST['points'];
 
@@ -180,7 +187,7 @@ if ( (isset($_POST['update_post'])) ) {
 
 
 
-   $update_lesson = "UPDATE lesson SET  lesson_title= '$lesson_titles',  lesson_youtube = '$lesson_youtubes' , lesson_aim = '$lesson_aims'  , lesson_inst = '$lesson_insts' , lesson_compo = '$lesson_compos' ,   lesson_quiz_id = '$lesson_quiz_ids' , points = '$pointss'  WHERE lesson_id ='$less_id'  ";
+   $update_lesson = "UPDATE lesson SET  lesson_title= '$lesson_titles',  lesson_youtube = '$lesson_youtubes' , lesson_aim = '$lesson_aims'  , lesson_inst = '$lesson_insts' , lesson_code='$lesson_code' ,lesson_compo = '$lesson_compos' ,   lesson_quiz_id = '$lesson_quiz_ids' , points = '$pointss'  WHERE lesson_id ='$less_id'  ";
 
 
  

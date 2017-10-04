@@ -36,31 +36,23 @@ class CycloneSlider_Data {
     public function run(){
         global $wp_version;
 		
-		// Save slides. Use better hook if available
-		if ( version_compare( $wp_version, '3.7', '>=' ) ) {
-			add_action( 'save_post_cycloneslider', array( $this, 'save_slider_post' ) );
-		} else {
-			add_action( 'save_post', array( $this, 'save_slider_post' ) );
-		}
-        
-        
+        // Add save hook
+	    $this->_add_save_hook( $wp_version );
     }
     
     /**
      * Save post hook
      */
-    public function save_slider_post( $post_id ){
-        global $cyclone_slider_saved_done;
-        
-        // Stop! We have already saved..
-        if($cyclone_slider_saved_done){
-            return $post_id;
-        }
+    public function save_post_hook( $post_id ){
+        global $wp_version;
+
+        // Use local variable
+        $post = $_POST;
         
         // Verify nonce
         $nonce_name = $this->nonce_name;
-        if (!empty($_POST[$nonce_name])) {
-            if (!wp_verify_nonce($_POST[$nonce_name], $this->nonce_action)) {
+        if (!empty($post[$nonce_name])) {
+            if (!wp_verify_nonce($post[$nonce_name], $this->nonce_action)) {
                 return $post_id;
             }
         } else {
@@ -71,52 +63,69 @@ class CycloneSlider_Data {
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
             return $post_id;
         }
-        
-        // Assign POST data with array key checks
-        $slides = isset($_POST['cycloneslider_metas']) ? $_POST['cycloneslider_metas'] : array();
-        $slider_settings = isset($_POST['cycloneslider_settings']) ? $_POST['cycloneslider_settings'] : array();
-        // Resize images
-        $this->image_resizer->resize_images( $slider_settings, $slides );
-        
-        // Save slides
-        $this->add_slider_slides( $post_id, $slides );
-        
-        // Save slider settings
-        $this->add_slider_settings( $post_id, $slider_settings);
-        
-        // Marked as done
-        $cyclone_slider_saved_done = true;
+        // TODO: Comprehensive array key checks
+        $slider = array(
+            'id' => $post_id,
+			'name' => $post['post_name'],
+			'title' => $post['post_title'],
+			'status' => $post['post_status'],
+			'slider_settings' => isset($post['cycloneslider_settings']) ? $post['cycloneslider_settings'] : array(),
+			'slides' => isset($post['cycloneslider_metas']) ? $post['cycloneslider_metas'] : array(),
+        );
+        // Remove temporarily to avoid infinite loop
+	    $this->_remove_save_hook( $wp_version );
+	    // Update slider info
+	    $this->update_slider($slider);
+		// Add save hook
+	    $this->_add_save_hook( $wp_version );
     }
     
     /**
-     * API to add slider
-     */
-    public function add_slider( $post_title, $slider_settings, $slides ){
-        
-        $post_data = array(
-            'post_type' => 'cycloneslider',
-            'post_title' => $post_title,
-            'post_content' => '',
-            'post_status' => 'publish'
-        );
+	 * @param array $slider
+	 *
+	 * @return int|\WP_Error
+	 */
+	public function add_slider( $slider ){
 
-        if( $slider_id = wp_insert_post( $post_data ) ){
-            
-            // Resize images if needed
-            if( $slider_settings['resize'] == 1){
+		$slider['id'] = 0; // Set to zero to insert instead of update
+		return $this->update_slider( $slider );
+	}
+
+    /**
+	 * @param array $slider
+	 *
+	 * @return int|\WP_Error
+	 */
+	public function update_slider( $slider ){
+
+		$post_data = array(
+			'ID' => (int) $slider['id'],
+			'post_name' => wp_strip_all_tags($slider['name'], true),
+			'post_title' => wp_strip_all_tags($slider['title'], true),
+			'post_type' => 'cycloneslider',
+			'post_status' => $slider['status'],
+			'post_content' => ''
+		);
+
+		if( $slider_id = wp_insert_post( $post_data ) ){
+
+			// Resize images if needed
+            if( $slider['slider_settings']['resize'] == 1){
 				
-                $this->image_resizer->resize_images( $slider_settings, $slides );
+                $this->image_resizer->resize_images( $slider['slider_settings'], $slider['slides'] );
             }
             
             // Save slides
-            $this->add_slider_slides( $slider_id, $slides );
+            $this->add_slider_slides( $slider_id, $slider['slides'] );
             
             // Save slider settings
-            $this->add_slider_settings( $slider_id, $slider_settings );
-			
-        }
-    }
-    
+            $this->add_slider_settings( $slider_id, $slider['slider_settings'] );
+
+		}
+
+		return $slider_id;
+	}
+
     /**
      * Add Slide Settings
      * 
@@ -126,7 +135,7 @@ class CycloneSlider_Data {
      * @param array $settings Slider settings array
      * @return void
      */
-    public function add_slider_settings( $slider_id, $settings ){
+    public function add_slider_settings( $slider_id, array $settings ){
         $settings = wp_parse_args(
             $settings,
             $this->get_slider_defaults()
@@ -147,17 +156,8 @@ class CycloneSlider_Data {
         $settings_to_save['random'] = (int) ( $settings['random'] );
         $settings_to_save['resize'] = (int) ( $settings['resize'] );
         $settings_to_save['width_management'] = sanitize_text_field( $settings['width_management'] );
-        // Pro options
-        $settings_to_save['easing'] = '';
-        $settings_to_save['resize_option'] = 'fit';
-        $settings_to_save['resize_quality'] = 100;
-        $settings_to_save['allow_wrap'] = 'true';
-        $settings_to_save['dynamic_height'] = 'off';
-        $settings_to_save['dynamic_height_speed'] = 250;
-        $settings_to_save['delay'] = 0;
-        $settings_to_save['swipe'] = 'false';
 
-        $settings_to_save = apply_filters('cycloneslider_settings', $settings_to_save, $slider_id); // Apply filters before saving
+        $settings_to_save = apply_filters('cycloneslider_settings', $settings_to_save, $settings, $slider_id); // Apply filters before saving
         
         delete_post_meta($slider_id, '_cycloneslider_settings');
         update_post_meta($slider_id, '_cycloneslider_settings', $settings_to_save);
@@ -170,60 +170,57 @@ class CycloneSlider_Data {
      *
      * @param int $slider_id Slider post ID
      * @param array $slides Slides array
-     * @return void
      */
-    public function add_slider_slides( $slider_id, $slides ){
+    public function add_slider_slides( $slider_id, array $slides ){
         
         $slides_to_save = array();
         
-        if( is_array($slides) ){
-
-            $i=0;//always start from 0
-            foreach($slides as $slide){
-                $slide = wp_parse_args(
-                    $slide,
-                    $this->get_slide_defaults()
-                );
-                $slides_to_save[$i]['id'] = (int) ($slide['id']);
-                $slides_to_save[$i]['type'] = sanitize_text_field($slide['type']);
-                $slides_to_save[$i]['hidden'] = (int) ($slide['hidden']);
-                
-                $slides_to_save[$i]['link'] = esc_url_raw($slide['link']);
-                $slides_to_save[$i]['title'] = wp_kses_post($slide['title']);
-                $slides_to_save[$i]['description'] = wp_kses_post($slide['description']);
-                $slides_to_save[$i]['link_target'] = sanitize_text_field($slide['link_target']);
-                
-                $slides_to_save[$i]['img_alt'] = sanitize_text_field($slide['img_alt']);
-                $slides_to_save[$i]['img_title'] = sanitize_text_field($slide['img_title']);
-                
-                $slides_to_save[$i]['enable_slide_effects'] = (int) ($slide['enable_slide_effects']);
-                $slides_to_save[$i]['fx'] = sanitize_text_field($slide['fx']);
-                $slides_to_save[$i]['speed'] = sanitize_text_field($slide['speed']);
-                $slides_to_save[$i]['timeout'] = sanitize_text_field($slide['timeout']);
-                $slides_to_save[$i]['tile_count'] = sanitize_text_field($slide['tile_count']);
-                $slides_to_save[$i]['tile_delay'] = sanitize_text_field($slide['tile_delay']);
-                $slides_to_save[$i]['tile_vertical'] = sanitize_text_field($slide['tile_vertical']);
-                
-                $slides_to_save[$i]['video_thumb'] = esc_url_raw($slide['video_thumb']);
-                $slides_to_save[$i]['video_url'] = esc_url_raw($slide['video_url']);
-                $slides_to_save[$i]['video'] = $slide['video'];
-                
-                $slides_to_save[$i]['custom'] = $slide['custom'];
-                
-                $slides_to_save[$i]['youtube_url'] = esc_url_raw($slide['youtube_url']);
-                $slides_to_save[$i]['youtube_related'] = sanitize_text_field($slide['youtube_related']);
-                
-                $slides_to_save[$i]['vimeo_url'] = esc_url_raw($slide['vimeo_url']);
-                
-                $slides_to_save[$i]['testimonial'] = wp_kses_post($slide['testimonial']);
-                $slides_to_save[$i]['testimonial_author'] = sanitize_text_field($slide['testimonial_author']);
-                $slides_to_save[$i]['testimonial_link'] = esc_url_raw($slide['testimonial_link']);
-                $slides_to_save[$i]['testimonial_link_target'] = sanitize_text_field($slide['testimonial_link_target']);
+        $i=0;//always start from 0
+        foreach($slides as $slide){
+            $slide = wp_parse_args(
+                $slide,
+                $this->get_slide_defaults()
+            );
+            $slides_to_save[$i]['id'] = (int) ($slide['id']);
+            $slides_to_save[$i]['type'] = sanitize_text_field($slide['type']);
+            $slides_to_save[$i]['hidden'] = (int) ($slide['hidden']);
             
-                $i++;
-            }
+            $slides_to_save[$i]['link'] = esc_url_raw($slide['link']);
+            $slides_to_save[$i]['title'] = wp_kses_post($slide['title']);
+            $slides_to_save[$i]['description'] = wp_kses_post($slide['description']);
+            $slides_to_save[$i]['link_target'] = sanitize_text_field($slide['link_target']);
             
+            $slides_to_save[$i]['img_alt'] = sanitize_text_field($slide['img_alt']);
+            $slides_to_save[$i]['img_title'] = sanitize_text_field($slide['img_title']);
+            
+            $slides_to_save[$i]['enable_slide_effects'] = (int) ($slide['enable_slide_effects']);
+            $slides_to_save[$i]['fx'] = sanitize_text_field($slide['fx']);
+            $slides_to_save[$i]['speed'] = sanitize_text_field($slide['speed']);
+            $slides_to_save[$i]['timeout'] = sanitize_text_field($slide['timeout']);
+            $slides_to_save[$i]['tile_count'] = sanitize_text_field($slide['tile_count']);
+            $slides_to_save[$i]['tile_delay'] = sanitize_text_field($slide['tile_delay']);
+            $slides_to_save[$i]['tile_vertical'] = sanitize_text_field($slide['tile_vertical']);
+            
+            $slides_to_save[$i]['video_thumb'] = esc_url_raw($slide['video_thumb']);
+            $slides_to_save[$i]['video_url'] = esc_url_raw($slide['video_url']);
+            $slides_to_save[$i]['video'] = $slide['video'];
+            
+            $slides_to_save[$i]['custom'] = $slide['custom'];
+            
+            $slides_to_save[$i]['youtube_url'] = esc_url_raw($slide['youtube_url']);
+            $slides_to_save[$i]['youtube_related'] = sanitize_text_field($slide['youtube_related']);
+            
+            $slides_to_save[$i]['vimeo_url'] = esc_url_raw($slide['vimeo_url']);
+            
+            $slides_to_save[$i]['testimonial'] = wp_kses_post($slide['testimonial']);
+            $slides_to_save[$i]['testimonial_author'] = sanitize_text_field($slide['testimonial_author']);
+            $slides_to_save[$i]['testimonial_link'] = esc_url_raw($slide['testimonial_link']);
+            $slides_to_save[$i]['testimonial_link_target'] = sanitize_text_field($slide['testimonial_link_target']);
+            $slides_to_save[$i]['testimonial_img'] = (int) $slide['testimonial_img'];
+        
+            $i++;
         }
+            
         $slides_to_save = apply_filters('cycloneslider_slides', $slides_to_save); //do filter before saving
         
         delete_post_meta($slider_id, '_cycloneslider_metas');
@@ -247,31 +244,81 @@ class CycloneSlider_Data {
     }
     
     /**
+	 * @param $slug Post slug
+	 *
+	 * @return array|NULL
+	 */
+    public function get_slider_by_slug( $slug ){
+        global $wp_version;
+
+		$args = array(
+			'numberposts' => 1 // 1 only
+		);
+
+        $args['name'] = $slug;
+        if ( version_compare( $wp_version, '4.4', '>=' ) ) { // post_name__in avail only in 4.4
+            $args['post_name__in'] = array( $slug ); // Workaround: Using "post_name__in" not "name" as WP returns a post instead of nothing when name is ''.
+        }
+		
+		$sliders = $this->get_sliders( $args );
+		return array_pop($sliders); // Return the lone slideshow or NULL if empty
+    }
+
+    /**
+	 * @param $id_or_slug
+	 *
+	 * @return array|NULL
+     * @throws Exception on invalid parameter
+	 */
+	public function get_slider( $id_or_slug ) {
+		global $wp_version;
+
+		$args = array(
+			'numberposts' => 1 // 1 only
+		);
+
+		if ( is_numeric( $id_or_slug ) ) {
+			$args['post__in'] = array( $id_or_slug ); // Workaround: Using "post_in" not "p" as WP inserts an ID when p <= 0.
+		} else if ( is_string( $id_or_slug ) ) {
+			$args['name'] = $id_or_slug;
+			if ( version_compare( $wp_version, '4.4', '>=' ) ) { // post_name__in avail only in 4.4
+				$args['post_name__in'] = array( $id_or_slug ); // Workaround: Using "post_name__in" not "name" as WP returns a post instead of nothing when name is ''.
+			}
+		} else {
+			throw new Exception( sprintf(__( 'Invalid format for get_slider %s parameter.', 'cycloneslider' ), '$id_or_slug') );
+		}
+
+		$sliders = $this->get_sliders( $args );
+		return array_pop($sliders); // Return the lone slideshow or NULL if empty
+	}
+
+    /**
     * Get Sliders
     *
     * Get all sliders and their accompanying meta data
     * 
-    * @return array|false The array of sliders post and their meta data or false on fail
+    * @return array Returns an array of sliders
     */
     public function get_sliders( $args=array() ){
         $defaults = array(
             'post_type' => 'cycloneslider',
-            'numberposts' => -1 // Get all
+            'post_status' => array('any', 'auto-draft'), // As long as it exist, get it
+			'numberposts' => -1 // Get all
         );
         $args = wp_parse_args($args, $defaults);
         
-        $slider_posts = get_posts( $args ); // Use get_posts to avoid filters
         $sliders = array(); // Store it here
-        if( !empty($slider_posts) and is_array($slider_posts) ){
-            foreach($slider_posts as $index=>$slider_post){
-                $sliders[$index] = (array) $slider_post;
-                $sliders[$index]['slider_settings'] = $this->get_slider_settings( $slider_post->ID );
-                $sliders[$index]['slides'] = $this->get_slider_slides( $slider_post->ID );
-            }
-            return $sliders;
-        } else {
-            return false;
+        foreach($this->get_posts( $args ) as $index=>$slider_post){
+            $sliders[$index] = array(
+                'id' => $slider_post['ID'],
+                'name' => $slider_post['post_name'],
+                'title' => $slider_post['post_title'],
+                'status' => $slider_post['post_status']
+            );
+            $sliders[$index]['slider_settings'] = $this->get_slider_settings( $slider_post['ID'] );
+            $sliders[$index]['slides'] = $this->get_slider_slides( $slider_post['ID'] );
         }
+        return $sliders;
     }
     
     /**
@@ -283,11 +330,7 @@ class CycloneSlider_Data {
     * @return array The array of slider settings
     */
     public function get_slider_settings( $slider_id ) {
-        $meta = get_post_custom( $slider_id );
-        $slider_settings = array();
-        if(isset($meta['_cycloneslider_settings'][0]) and !empty($meta['_cycloneslider_settings'][0])){
-            $slider_settings = maybe_unserialize($meta['_cycloneslider_settings'][0]);
-        }
+        $slider_settings = $this->get_post_meta( $slider_id, '_cycloneslider_settings' );
         $slider_settings = wp_parse_args($slider_settings, $this->get_slider_defaults() );
         return apply_filters('cycloneslider_get_slider_settings', $slider_settings);
     }
@@ -296,68 +339,29 @@ class CycloneSlider_Data {
     * Get Slider Slides
     *
     * @param int $slider_id Post ID of the slider custom post.
-    * @return array The array of slides settings
+    * @return array The array of slides or empty array
     */
     public function get_slider_slides( $slider_id ){
-        $meta = get_post_custom( $slider_id );
+        $slides = $this->get_post_meta( $slider_id, '_cycloneslider_metas' );
         
-        if(isset($meta['_cycloneslider_metas'][0]) and !empty($meta['_cycloneslider_metas'][0])){
-            $slides = maybe_unserialize($meta['_cycloneslider_metas'][0]);
-            $defaults = $this->get_slide_defaults();
-            
-            foreach($slides as $i=>$slide){
-                $slides[$i] = wp_parse_args($slide, $defaults);
-            }
-            
-            return apply_filters('cycloneslider_get_slider_slides', $slides);
-        }
-        return false;
-    }
-    
-    /**
-     * Get Slider by Slug
-     *
-     * @param string $slug Post slug of the slider custom post.
-     * @return array|false The array of slider post and associated meta or false if none found
-     */
-    public function get_slider_by_slug( $slug ) {
-        // Get slider by id
-        $args = array(
-            'post_type' => 'cycloneslider',
-            'numberposts' => 1,
-            'name'=> $slug
-        );
-
-        $slider_posts = get_posts( $args ); // Use get_posts to avoid filters
-
-        if( isset($slider_posts[0]) ){
-            $slider_post = $slider_posts[0];
-            
-            $slider = (array) $slider_post;
-            $slider['slider_settings'] = $this->get_slider_settings( $slider_post->ID );
-            $slider['slides'] = $this->get_slider_slides( $slider_post->ID );
-            
-            return $slider;
+        $defaults = $this->get_slide_defaults();
+        foreach($slides as $i=>$slide){
+            $slides[$i] = wp_parse_args($slide, $defaults);
         }
         
-        return false;
+        return apply_filters('cycloneslider_get_slider_slides', $slides);
     }
     
     /**
     * Gets the number of slides of slideshow
     *
     * @param int $slider_id Post ID of slider custom post
-    * @return int|0 Total images or zero
+    * @return int Total slides
     */
     public function get_slide_count( $slider_id ){
-        $meta = get_post_custom( $slider_id );
+        $slides = $this->get_post_meta( $slider_id, '_cycloneslider_metas' );
         
-        if(isset($meta['_cycloneslider_metas'][0]) and !empty($meta['_cycloneslider_metas'][0])){
-            $slides = maybe_unserialize($meta['_cycloneslider_metas'][0]);
-            
-            return count($slides);
-        }
-        return 0;
+        return count($slides);
     }
     
     /**
@@ -558,7 +562,8 @@ class CycloneSlider_Data {
 	* Get settings data. If there is no data from database, use default values
 	*/
 	public function get_settings_page_data(){
-		return get_option( $this->settings_page_properties['option_name'], $this->get_default_settings_page_data() );
+		$option = get_option( $this->settings_page_properties['option_name'], array() );
+        return wp_parse_args($option, $this->get_default_settings_page_data());
 	}
     
     /**
@@ -566,6 +571,9 @@ class CycloneSlider_Data {
 	*/
 	public function get_default_settings_page_data() {
 		$defaults = array();
+
+		$defaults['legacy'] = 0;
+
 		$defaults['load_scripts_in'] = 'footer';
 		
 		$defaults['load_cycle2'] = 1;
@@ -594,38 +602,36 @@ class CycloneSlider_Data {
     * Prints out cycle2 per slide settings as data attributes
     *
     *
-    * @param array $slider_meta Slide settings array.
-    * @param array $slider_settings Slider settings array.
-    * @param string $slider_id HTML ID of slideshow.
-    * @param int $slider_count Current slideshow count.
-    * @return string Data attributes for slide.
+    * @param array $slide Slide settings array.
+    * @param array $slider Slider array.
+    *
+    * @return string data-* attributes for slide.
     */
-    public function slide_data_attributes($slider_meta, $slider_settings=array()){
-        $cycle2_settings = array();
-        if(!empty($slider_meta['enable_slide_effects'])){
-            $cycle2_settings['data-cycle-fx'] = $slider_meta['fx'];
-            
-            if(!empty($slider_meta['speed'])) {
-                $cycle2_settings['data-cycle-speed'] = $slider_meta['speed'];
-            }
-            if(!empty($slider_meta['timeout'])) {
-                $cycle2_settings['data-cycle-timeout'] = $slider_meta['timeout'];
-            }
-            if($slider_meta['fx']=='tileBlind' or $slider_meta['fx']=='tileSlide'){
-                if(!empty($slider_meta['tile_count'])) {
-                    $cycle2_settings['data-cycle-tile-count'] = $slider_meta['tile_count'];
-                }
-                if(!empty($slider_meta['tile_delay'])) {
-                    $cycle2_settings['data-cycle-tile-delay'] = $slider_meta['tile_delay'];
-                }
-                $cycle2_settings['data-cycle-tile-vertical'] = $slider_meta['tile_vertical'];
-            }
-            
+    public function slide_data_attributes($slide, $slider){
+        $data_attrib = array();
+        if($slide['fx'] != 'default'){
+            $data_attrib['data-cycle-fx'] = $slide['fx'];
         }
-        $cycle2_settings = apply_filters('cyclone_cycle2_slide_settings_array', $cycle2_settings, $slider_meta, $slider_settings);
+        if($slide['speed'] !== '') {
+            $data_attrib['data-cycle-speed'] = $slide['speed'];
+        }
+        if($slide['timeout'] !== '') {
+            $data_attrib['data-cycle-timeout'] = $slide['timeout'];
+        }
+        if($slide['fx']=='tileBlind' or $slide['fx']=='tileSlide'){
+            if($slide['tile_count'] !== '') {
+                $data_attrib['data-cycle-tile-count'] = $slide['tile_count'];
+            }
+            if($slide['tile_delay'] !== '') {
+                $data_attrib['data-cycle-tile-delay'] = $slide['tile_delay'];
+            }
+            $data_attrib['data-cycle-tile-vertical'] = $slide['tile_vertical'];
+        }
+        
+        $data_attrib = apply_filters('cycloneslider_slide_data_attributes', $data_attrib, $slide, $slider);
         
         $out = '';
-        foreach($cycle2_settings as $data_attr=>$value){ //Array to html string
+        foreach($data_attrib as $data_attr=>$value){ // Array to html string
             $out .= ' '.$data_attr.'="'.esc_attr($value).'" ';
         }
         return $out;
@@ -792,7 +798,8 @@ class CycloneSlider_Data {
             'testimonial' => '',
             'testimonial_author' => '',
             'testimonial_link' => '',
-            'testimonial_link_target' => '_self'
+            'testimonial_link_target' => '_self',
+            'testimonial_img' => ''
         );
     }
     
@@ -804,20 +811,20 @@ class CycloneSlider_Data {
     public function get_resize_options(){
         if(version_compare(PHP_VERSION, '5.3', '>=')) { // 5.3+
             return array(
-                'fit'      => 'Fit',
-                'fill'     => 'Fill',
-                'crop'     => 'Crop',
-                'exact'      => 'Exact',
-                'exactWidth' => 'Exact Width',
-                'exactHeight'  => 'Exact Height'
+                'fit'      => __('Fit', 'cycloneslider'),
+                'fill'     => __('Fill', 'cycloneslider'),
+                'crop'     => __('Crop', 'cycloneslider'),
+                'exact'      => __('Exact', 'cycloneslider'),
+                'exactWidth' => __('Exact Width', 'cycloneslider'),
+                'exactHeight'  => __('Exact Height', 'cycloneslider')
             );
         } else { // 5.2
             return array(
-                'auto'      => 'Auto',
-                'crop'      => 'Crop',
-                'exact'     => 'Exact',
-                'landscape' => 'Landscape',
-                'portrait'  => 'Portrait'
+                'auto'      => __('Auto', 'cycloneslider'),
+                'crop'      => __('Crop', 'cycloneslider'),
+                'exact'     => __('Exact', 'cycloneslider'),
+                'landscape' => __('Landscape', 'cycloneslider'),
+                'portrait'  => __('Portrait', 'cycloneslider')
             );
         }
     }
@@ -829,12 +836,12 @@ class CycloneSlider_Data {
     */
     public function get_slide_effects(){
         return array(
-            'fade'=>'Fade',
-            'fadeout'=>'Fade Out',
-            'none'=>'None',
-            'scrollHorz'=>'Scroll Horizontally',
-            'tileBlind'=>'Tile Blind',
-            'tileSlide'=>'Tile Slide'
+            'fade'=>__('Fade', 'cycloneslider'),
+            'fadeout'=>__('Fade Out', 'cycloneslider'),
+            'none'=>__('None', 'cycloneslider'),
+            'scrollHorz'=>__('Scroll Horizontally', 'cycloneslider'),
+            'tileBlind'=>__('Tile Blind', 'cycloneslider'),
+            'tileSlide'=>__('Tile Slide', 'cycloneslider')
         );
     }
     
@@ -846,134 +853,186 @@ class CycloneSlider_Data {
     public function get_jquery_easing_options(){
         return array(
             array(
-                'text' => 'Default',
+                'text' => __('Default', 'cycloneslider'),
                 'value' => ''
             ),
             array(
-                'text' => 'Swing',
+                'text' => __('Swing', 'cycloneslider'),
                 'value' => 'swing'
             ),
             array(
-                'text' => 'Ease-In Quad',
+                'text' => __('Ease-In Quad', 'cycloneslider'),
                 'value' => 'easeInQuad'
             ),
             array(
-                'text' => 'Ease-Out Quad',
+                'text' => __('Ease-Out Quad', 'cycloneslider'),
                 'value' => 'easeOutQuad'
             ),
             array(
-                'text' => 'Ease-In OutQuad',
+                'text' => __('Ease-In OutQuad', 'cycloneslider'),
                 'value' => 'easeInOutQuad'
             ),
             array(
-                'text' => 'Ease-In Cubic',
+                'text' => __('Ease-In Cubic', 'cycloneslider'),
                 'value' => 'easeInCubic'
             ),
             array(
-                'text' => 'Ease-Out Cubic',
+                'text' => __('Ease-Out Cubic', 'cycloneslider'),
                 'value' => 'easeOutCubic'
             ),
             array(
-                'text' => 'Ease-In OutCubic',
+                'text' => __('Ease-In OutCubic', 'cycloneslider'),
                 'value' => 'easeInOutCubic'
             ),
             array(
-                'text' => 'Ease-In Quart',
+                'text' => __('Ease-In Quart', 'cycloneslider'),
                 'value' => 'easeInQuart'
             ),
             array(
-                'text' => 'Ease-Out Quart',
+                'text' => __('Ease-Out Quart', 'cycloneslider'),
                 'value' => 'easeOutQuart'
             ),
             array(
-                'text' => 'Ease-In OutQuart',
+                'text' => __('Ease-In OutQuart', 'cycloneslider'),
                 'value' => 'easeInOutQuart'
             ),
             array(
-                'text' => 'Ease-In Quint',
+                'text' => __('Ease-In Quint', 'cycloneslider'),
                 'value' => 'easeInQuint'
             ),
             array(
-                'text' => 'Ease-Out Quint',
+                'text' => __('Ease-Out Quint', 'cycloneslider'),
                 'value' => 'easeOutQuint'
             ),
             array(
-                'text' => 'Ease-In OutQuint',
+                'text' => __('Ease-In OutQuint', 'cycloneslider'),
                 'value' => 'easeInOutQuint'
             ),
             array(
-                'text' => 'Ease-In Sine',
+                'text' => __('Ease-In Sine', 'cycloneslider'),
                 'value' => 'easeInSine'
             ),
             array(
-                'text' => 'Ease-Out Sine',
+                'text' => __('Ease-Out Sine', 'cycloneslider'),
                 'value' => 'easeOutSine'
             ),
             array(
-                'text' => 'Ease-In OutSine',
+                'text' => __('Ease-In OutSine', 'cycloneslider'),
                 'value' => 'easeInOutSine'
             ),
             array(
-                'text' => 'Ease-In Expo',
+                'text' => __('Ease-In Expo', 'cycloneslider'),
                 'value' => 'easeInExpo'
             ),
             array(
-                'text' => 'Ease-Out Expo',
+                'text' => __('Ease-Out Expo', 'cycloneslider'),
                 'value' => 'easeOutExpo'
             ),
             array(
-                'text' => 'Ease-In OutExpo',
+                'text' => __('Ease-In OutExpo', 'cycloneslider'),
                 'value' => 'easeInOutExpo'
             ),
             array(
-                'text' => 'Ease-In Circ',
+                'text' => __('Ease-In Circ', 'cycloneslider'),
                 'value' => 'easeInCirc'
             ),
             array(
-                'text' => 'Ease-Out Circ',
+                'text' => __('Ease-Out Circ', 'cycloneslider'),
                 'value' => 'easeOutCirc'
             ),
             array(
-                'text' => 'Ease-In OutCirc',
+                'text' => __('Ease-In OutCirc', 'cycloneslider'),
                 'value' => 'easeInOutCirc'
             ),
             array(
-                'text' => 'Ease-In Elastic',
+                'text' => __('Ease-In Elastic', 'cycloneslider'),
                 'value' => 'easeInElastic'
             ),
             array(
-                'text' => 'Ease-Out Elastic',
+                'text' => __('Ease-Out Elastic', 'cycloneslider'),
                 'value' => 'easeOutElastic'
             ),
             array(
-                'text' => 'Ease-In OutElastic',
+                'text' => __('Ease-In OutElastic', 'cycloneslider'),
                 'value' => 'easeInOutElastic'
             ),
             array(
-                'text' => 'Ease-In Back',
+                'text' => __('Ease-In Back', 'cycloneslider'),
                 'value' => 'easeInBack'
             ),
             array(
-                'text' => 'Ease-Out Back',
+                'text' => __('Ease-Out Back', 'cycloneslider'),
                 'value' => 'easeOutBack'
             ),
             array(
-                'text' => 'Ease-In OutBack',
+                'text' => __('Ease-In OutBack', 'cycloneslider'),
                 'value' => 'easeInOutBack'
             ),
             array(
-                'text' => 'Ease-In Bounce',
+                'text' => __('Ease-In Bounce', 'cycloneslider'),
                 'value' => 'easeInBounce'
             ),
             array(
-                'text' => 'Ease-Out Bounce',
+                'text' => __('Ease-Out Bounce', 'cycloneslider'),
                 'value' => 'easeOutBounce'
             ),
             array(
-                'text' => 'Ease-In OutBounce',
+                'text' => __('Ease-In OutBounce', 'cycloneslider'),
                 'value' => 'easeInOutBounce'
             )
         );
     }
+
+    /**
+	 * Wrapper for WP get_posts.
+	 *
+	 * @param array $args The same as WP get_posts
+	 *
+	 * @return array An assoc array of posts or empty array
+	 */
+	public function get_posts( array $args ) {
+		$posts   = get_posts( $args ); // Returns array
+		$results = array(); // Store it here
+		if ( ! empty( $posts ) and is_array( $posts ) ) {
+			foreach ( $posts as $index => $post ) {
+				$results[ $index ] = (array) $post; // Obj to assoc array
+			}
+		}
+		return $results;
+	}
+
+    /**
+	 * Wrapper for WP get_post_custom that automatically unserialize data.
+	 *
+	 * @param int $post_id ID of post
+	 * @param string $key Meta key name
+	 *
+	 * @return array Array of data or empty array
+	 */
+	public function get_post_meta( $post_id, $key ) {
+		$meta = get_post_custom( $post_id );
+		if ( isset( $meta[ $key ][0] ) and ! empty( $meta[ $key ][0] ) ) {
+			return maybe_unserialize( $meta[ $key ][0] );
+		}
+        return array();
+	}
+
+    private function _add_save_hook($wp_version){
+		// Use better hook if available
+		if ( version_compare( $wp_version, '3.7', '>=' ) ) {
+			add_action( "save_post_cycloneslider", array( $this, 'save_post_hook' ) );
+		} else {
+			add_action( 'save_post', array( $this, 'save_post_hook' ) );
+		}
+	}
+
+	private function _remove_save_hook($wp_version){
+		// Use better hook if available
+		if ( version_compare( $wp_version, '3.7', '>=' ) ) {
+			remove_action( "save_post_cycloneslider", array( $this, 'save_post_hook' ) );
+		} else {
+			remove_action( 'save_post', array( $this, 'save_post_hook' ) );
+		}
+	}
 }
 

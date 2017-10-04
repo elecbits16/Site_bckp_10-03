@@ -96,6 +96,8 @@ include("public/algobarprod.php");
 <a href="http://elecbits.in/software.php?soft_id=658"><div class="well well-sm">Red Object detection- MATLAB</div></a>
 <a href=" http://elecbits.in/software.php?soft_id=2"><div class="well well-sm">GUI Calculator- MATLAB</div></a>
 <a href=" http://elecbits.in/software.php?soft_id=3"><div class="well well-sm">Face Detection- MATLAB</div></a>
+<a href=" http://elecbits.in/software.php?soft_id=815916"><div class="well well-sm">Twitter based Sentiment Analysis- MATLAB</div></a>
+
  
 <br>
 

@@ -102,6 +102,10 @@ include("include/db.php");
     <td> <textarea name="lesson_inst"   cols="20" rows="10"></textarea> </td> 
   </tr>
 
+<tr>
+      <td>Lesson code :</td>
+    <td> <textarea name="lesson_code"   cols="20" rows="10"></textarea> </td> 
+  </tr>
 
    <tr>
       <td>Lesson Quiz ID :</td>
@@ -147,13 +151,12 @@ if ( (isset($_POST['insert_post'])) || (isset($_FILES['uploadedfile']) )) {
    $lesson_youtube= $_POST['lesson_youtube'];
    $lesson_aim = $_POST['lesson_aim'];
    $lesson_inst= $_POST['lesson_inst'];  
+   $lesson_code= $_POST['lesson_code'];
    $lesson_quiz_id = $_POST['lesson_quiz_id'];
    $points = $_POST['points'];
    
  
-    $insert_lesson = "INSERT INTO lesson (lesson_id , lesson_title, lesson_youtube, lesson_aim, lesson_compo, lesson_inst, lesson_quiz_id , points) VALUES ('$lesson_id','$lesson_title','$lesson_youtube' ,  '$lesson_aim' ,'$lesson_compo' ,'$lesson_inst' , '$lesson_quiz_id' , '$points' ) ";
-
-
+    $insert_lesson = "INSERT INTO lesson (lesson_id , lesson_title, lesson_youtube, lesson_aim, lesson_compo, lesson_inst, lesson_code, lesson_quiz_id , points) VALUES ('$lesson_id','$lesson_title','$lesson_youtube' ,  '$lesson_aim' ,'$lesson_compo' ,'$lesson_inst' , '$lesson_code','$lesson_quiz_id' , '$points' ) ";
 
 
 

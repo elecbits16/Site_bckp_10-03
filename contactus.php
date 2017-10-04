@@ -182,7 +182,7 @@ if (isset($_POST['update'])) {
 
    $message = "Thanks for contacting Elecbits, we will respond to you soon.  Meanwhile visit us at http://elecbits.in";
 
-    $from= "from: Info@elecbits.in";
+    $from= "from: Contact@elecbits.in";
 
 if(filter_var($email, FILTER_VALIDATE_EMAIL)){
 

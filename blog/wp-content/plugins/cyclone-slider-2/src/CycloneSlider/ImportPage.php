@@ -60,18 +60,18 @@ class CycloneSlider_ImportPage extends CycloneSlider_WpAdminSubPage {
 		$vars['nextgen_page_url'] = $this->nextgen_page_url;
 		$vars['error'] = get_transient( 'cycloneslider_error_import');
 		if(!class_exists('ZipArchive')){
-			$vars['error'] = __( 'ZipArchive not supported. ZipArchive is needed for Import and Export to work.', 'cyclone-slider-2' );
+			$vars['error'] = __( 'ZipArchive not supported. ZipArchive is needed for Import and Export to work.', 'cycloneslider' );
 		}
 		delete_transient( 'cycloneslider_error_import');
 		
 		$vars['tabs'] = array(
 			array(
-				'title' => __('Export', 'cyclone-slider-2'),
+				'title' => __('Export', 'cycloneslider'),
 				'url' => $this->export_page_url,
 				'classes' => 'nav-tab'
 			),
 			array(
-				'title' => __('Import', 'cyclone-slider-2'),
+				'title' => __('Import', 'cycloneslider'),
 				'url' => $this->import_page_url,
 				'classes' => 'nav-tab nav-tab-active'
 			)
@@ -113,7 +113,7 @@ class CycloneSlider_ImportPage extends CycloneSlider_WpAdminSubPage {
 			$this->rmdir_recursive( $this->cyclone_slider_dir.'/imports' );
 		}
 		
-		$vars['ok'] = __('Import operation success!', 'cyclone-slider-2' );
+		$vars['ok'] = __('Import operation success!', 'cycloneslider' );
 		
 		$this->view->render('import-step-3.php', $vars);
 

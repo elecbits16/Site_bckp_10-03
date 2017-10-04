@@ -14,57 +14,130 @@ echo "<script>window.open('../index.php','_self')</script>";
 else{
 
 
-
 ?>
 
 
-
+ 
 
 
 <html>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Learn | Dashboard</title>
-  <!-- Tell the browser to be responsive to screen width -->
-  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-  <!-- Bootstrap 3.3.6 -->
-  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
-  <!-- Ionicons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
-  <!-- AdminLTE Skins. Choose a skin from the css/skins
-       folder instead of downloading all of them to reduce the load. -->
-  <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
-  <!-- iCheck -->
-  <link rel="stylesheet" href="plugins/iCheck/flat/blue.css">
-  <!-- Morris chart -->
-  <link rel="stylesheet" href="plugins/morris/morris.css">
-  <!-- jvectormap -->
-  <link rel="stylesheet" href="plugins/jvectormap/jquery-jvectormap-1.2.2.css">
-  <!-- Date Picker -->
-  <link rel="stylesheet" href="plugins/datepicker/datepicker3.css">
-  <!-- Daterange picker -->
-  <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
-  <!-- bootstrap wysihtml5 - text editor -->
-  <link rel="stylesheet" href="plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+<title>Learn Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+<!-- Angular Material requires Angular.js Libraries -->
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular-route.min.js"></script>	
 
-  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-  <!--[if lt IE 9]>
-  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-  <![endif]-->
-</head>
-<body class="hold-transition skin-white sidebar-mini">
-<div class="wrapper">
+  <!-- Angular Material Library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+.logo{
+      width: 150px;
+    margin: 14px 44px;
+}
+.sidebar-h1{
+  font-family: 'Roboto',sans-serif;
+    color: white;
+    margin-top: -4px;
+    text-align: center;
+    font-size: 28px;
+}
+.embed-responsive {
+  position: relative;
+  display: block;
+  height: 0;
+  padding: 0;
+  overflow: hidden;
+}
+.embed-responsive .embed-responsive-item,
+.embed-responsive iframe,
+.embed-responsive embed,
+.embed-responsive object,
+.embed-responsive video {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.embed-responsive-16by9 {
+  padding-bottom: 56.25%;
+}
+.embed-responsive-4by3 {
+  padding-bottom: 75%;
+}
+.sidebar-h3{
+  color: white;
+  margin: 16px;
+  font-size: 16px;
+}
+.w3-button{
+  color: white;
+  padding-bottom: 19px;
+  font-family: 'Roboto',sans-serif;
+}
+.w3-button:hover {
+    color: white!important;
+    background-color: #0071CC!important;
+}
 
+.tabsdemoDynamicHeight md-content {
+  background-color: transparent !important; }
+  .tabsdemoDynamicHeight md-content md-tabs {
+    background: #f6f6f6;
+    border: 1px solid #e1e1e1; }
+    .tabsdemoDynamicHeight md-content md-tabs md-tabs-wrapper {
+      background: white; }
+  .tabsdemoDynamicHeight md-content h1:first-child {
+    margin-top: 0; }
 
+    md-tabs md-ink-bar {
+    color: #2374C6;
+    background: #2374C6;
+}
 
-  <?php
+.fabSpeedDialdemoBasicUsage .text-capitalize {
+  text-transform: capitalize; }
+
+.fabSpeedDialdemoBasicUsage .md-fab:hover, .fabSpeedDialdemoBasicUsage .md-fab.md-focused {
+  background-color: #000 !important; }
+
+.fabSpeedDialdemoBasicUsage p.note {
+  font-size: 1.2rem; }
+
+.fabSpeedDialdemoBasicUsage .lock-size {
+  min-width: 300px;
+  min-height: 300px;
+  width: 300px;
+  height: 300px;
+  margin-left: auto;
+  margin-right: auto; }
+ 
+.md-padding {
+    padding: 44px;
+}
+.md-button.md-warn.md-fab {
+    color: rgb(255,255,255);
+    background-color: #216fbe;
+    padding: 7px;
+}
+.material-icons{
+	padding-top: 9px; 
+}
+</style>
+
+ <?php
 
 
             $c_email =  $_SESSION['customer_email'];
@@ -78,106 +151,148 @@ else{
     {
         $customer_name = $row_name_pro['customer_name'];
      
-
+}
 
             ?>
 
 
+<body ng-app="myApp" ng-controller="DemoCtrl as demo">
+
+<div class="w3-sidebar w3-bar-block w3-collapse w3-card-2 w3-animate-left" style="width:240px;background: linear-gradient(#185694, rgb(41, 132, 224));" id="mySidebar">
+  <button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
+  
+  <a href="home.php" style="text-decoration: none;"><h1 class="sidebar-h1" style=" margin-top: 20px; margin-left: 0px;"> <img src="transymbol.png"  width="30" height="30"> Elecduino</h1> </a>
+   
+  <br>
+
+   <ul class="nav nav-pills hidden-xs hidden-sm">
+
+    <li class="active"><a data-toggle="pill" href="#home" style="font-size: 24px;">Learn</a></li>
+    <li><a data-toggle="pill" href="#menu1" style="font-size: 24px;" >Download</a></li>
+    </ul>
+
+
+   <ul class="nav nav-pills hidden-lg">
+
+    <li class="active"><a data-toggle="pill" href="#home" >Learn</a></li>
+    <li><a data-toggle="pill" href="#menu1" >Download</a></li>
+    </ul>
+
+  <div class="tab-content">
+    <div id="home" class="tab-pane fade in active">
+    <br>
+      <h3 class="sidebar-h3">Learning Panel</h3>
+      <br>
 
 <?php
 
-include("header.php");
+$get_lesson = "SELECT * FROM lesson";
+
+$run_lesson = mysql_query($get_lesson, $con);
+
+ while ( $row_lesson = mysql_fetch_array($run_lesson)) {
+   
+  
+$lesson_title = $row_lesson['lesson_title'];
+$lesson_id = $row_lesson['lesson_id'];
+
+
+
+
 
 ?>
 
+  <a href="index.php?lesson_id=<?php echo $lesson_id; ?>" class="w3-bar-item w3-button" style="text-decoration: none;"><?php echo $lesson_title; ?></a>
+
+  <?php 
+
+}
+
+ ?>
+  <!--<a href="#" class="w3-bar-item w3-button" style="text-decoration: none;">2. Potentiometer</a>
+  <a href="#" class="w3-bar-item w3-button" style="text-decoration: none;">3. Photo Resistor</a>
+  <a href="#" class="w3-bar-item w3-button" style="text-decoration: none;">4. Serial Monitor Display</a>
+  <a href="#" class="w3-bar-item w3-button" style="text-decoration: none;">5. Seven Segment Display</a>
+  <a href="#" class="w3-bar-item w3-button" style="text-decoration: none;">6. Piezo Buzzer</a>
+  <a href="#" class="w3-bar-item w3-button" style="text-decoration: none;">7. Functions</a>
+  <a href="#" class="w3-bar-item w3-button" style="text-decoration: none;">8. Pulse Width Modulation</a>
+  <a href="#" class="w3-bar-item w3-button" style="text-decoration: none;">9. Quick Read Thermometer</a>-->
+
+    </div>
 
 
-  <!-- Left side column. contains the logo and sidebar -->
+
+
+    <div id="menu1" class="tab-pane fade">
+    <br>
+       <h3 class="sidebar-h3">Download Panel</h3>
+       <br>
+     <a href="#" class="w3-bar-item w3-button" style="text-decoration: none;">1. Digital input with switch</a>
+  <a href="#" class="w3-bar-item w3-button" style="text-decoration: none;">2. Potentiometer</a>
+  <a href="#" class="w3-bar-item w3-button" style="text-decoration: none;">3. Photo Resistor</a>
+  <a href="#" class="w3-bar-item w3-button" style="text-decoration: none;">4. Serial Monitor Display</a>
+  <a href="#" class="w3-bar-item w3-button" style="text-decoration: none;">5. Seven Segment Display</a>
+  <a href="#" class="w3-bar-item w3-button" style="text-decoration: none;">6. Piezo Buzzer</a>
+  <a href="#" class="w3-bar-item w3-button" style="text-decoration: none;">7. Functions</a>
+  <a href="#" class="w3-bar-item w3-button" style="text-decoration: none;">8. Pulse Width Modulation</a>
+  <a href="#" class="w3-bar-item w3-button" style="text-decoration: none;">9. Quick Read Thermometer</a>
+
+    </div>
+   
+   
+     
+  </div>
+
+<br>
+
+
+
+
+ 
+</div>
+
+<div class="w3-main" style="margin-left:240px; ">
+
+
 
 <?php
 
-include("sidebar.php");
 
-
-?>
-
-<!-- Content Wrapper. Contains page content -->
-<div class="content-wrapper">
-
-<?php
-
-
-
-include("content.php");
+include("central_content.php");
 
 ?>
-
-  <!-- /.content-wrapper -->
-
-
-  <?php
-
-
-include("footer.php");
-
-  ?>
 
 </div>
-  <!-- Control Sidebar -->
-<?php
 
-include("rightsidebar.php");
-
-?>
-  <!-- /.control-sidebar -->
-  <!-- Add the sidebar's background. This div must be placed
-       immediately after the control sidebar -->
-  <div class="control-sidebar-bg"></div>
-</div>
-<!-- ./wrapper -->
-
-<!-- jQuery 2.2.3 -->
-<script src="plugins/jQuery/jquery-2.2.3.min.js"></script>
-<!-- jQuery UI 1.11.4 -->
-<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
-<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
-  $.widget.bridge('uibutton', $.ui.button);
+var app=angular.module('myApp', ['ngMaterial']);
+app.controller('DemoCtrl',function($scope){
+	$scope.topDirections = ['left', 'up'];
+      $scope.bottomDirections = ['down', 'right'];
+
+      $scope.isOpen = false;
+
+      $scope.availableModes = ['md-fling', 'md-scale'];
+      $scope.selectedMode = 'md-fling';
+
+      $scope.availableDirections = ['up', 'down', 'left', 'right'];
+      $scope.selectedDirection = 'up';
+
+});
+function w3_open() {
+    document.getElementById("mySidebar").style.display = "block";
+}
+function w3_close() {
+    document.getElementById("mySidebar").style.display = "none";
+}
 </script>
-<!-- Bootstrap 3.3.6 -->
-<script src="bootstrap/js/bootstrap.min.js"></script>
-<!-- Morris.js charts -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-<script src="plugins/morris/morris.min.js"></script>
-<!-- Sparkline -->
-<script src="plugins/sparkline/jquery.sparkline.min.js"></script>
-<!-- jvectormap -->
-<script src="plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
-<script src="plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
-<!-- jQuery Knob Chart -->
-<script src="plugins/knob/jquery.knob.js"></script>
-<!-- daterangepicker -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
-<script src="plugins/daterangepicker/daterangepicker.js"></script>
-<!-- datepicker -->
-<script src="plugins/datepicker/bootstrap-datepicker.js"></script>
-<!-- Bootstrap WYSIHTML5 -->
-<script src="plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
-<!-- Slimscroll -->
-<script src="plugins/slimScroll/jquery.slimscroll.min.js"></script>
-<!-- FastClick -->
-<script src="plugins/fastclick/fastclick.js"></script>
-<!-- AdminLTE App -->
-<script src="dist/js/app.min.js"></script>
-<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="dist/js/pages/dashboard.js"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="dist/js/demo.js"></script>
+     
 </body>
 </html>
 
+
 <?php
 }
 
-}
+
 ?>

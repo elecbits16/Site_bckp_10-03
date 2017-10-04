@@ -242,11 +242,11 @@ include("public/sidebar.php");
 
 <div class="col-lg-2">
  
-<a href="<?php echo $link2; ?>">&nbsp &nbsp &nbsp &nbsp Download<br><img src="images/soft_down.png"> </a>
+<!--<a href="<?php echo $link2; ?>">&nbsp &nbsp &nbsp &nbsp Download<br><img src="images/soft_down.png"> </a> -->
 
 
 
-
+<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal_d">Order Now</button>
 
 
 </div>
@@ -302,7 +302,11 @@ include("public/sidebar.php");
 <div class="col-lg-6 col-xs-12 hidden-lg ">
 
 
-<a href="<?php echo $link2; ?>">&nbsp &nbsp &nbsp &nbsp Download<br><img src="images/soft_down.png"> </a>
+<!--<a href="<?php echo $link2; ?>">&nbsp &nbsp &nbsp &nbsp Download<br><img src="images/soft_down.png"> </a> -->
+
+
+ <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal_d">Order Now</button>
+
 
 
 </div>
@@ -310,6 +314,84 @@ include("public/sidebar.php");
 
 
 
+<div class="modal fade" id="myModal_d" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title"><?php echo $software_title; ?></h4>
+        </div>
+       
+
+      <div class="panel-body" style="background-color: white; color: black; font-family: 'Muli', sans-serif;">
+        
+   <form method="post"  action=" ">
+ <div class="form-group">
+    <label for="email">Name:</label>
+    <input type="text" class="form-control" name="name" id="email" required>
+  </div>
+  <div class="form-group">
+    <label for="pwd">Phone No:</label>
+    <input type="tel" class="form-control" name="phone" id="pwd" required>
+  </div>
+    <div class="form-group">
+    <label for="pwd">Message</label>
+    <textarea type="text" class="form-control" name="msg" required> </textarea>
+  </div>
+  
+  <button type="submit" class="btn btn-default" name="submit">Submit</button>
+
+
+
+
+
+   </form>
+
+   <?php
+   if (isset($_POST['submit']))
+
+    {
+       
+      $software_name = $software_title;
+      $name = $_POST['name'];
+      $phone = $_POST['phone'];
+      $msg = $_POST['msg'];
+     
+      $messgage = "$name,  $phone, $msg, $software_name";
+
+       $from= "from: Software_Elecbits@elecbits.in";
+
+       if( mail("saurav.rav67@gmail.com", "Project", $messgage, $from) && mail("elecbits16@gmail.com", "Project", $messgage, $from)  ) 
+      {  
+           echo "<script>alert('Your response has been added. Your response is important to us.')</script>";  
+      }  
+
+   }
+
+
+?>
+
+
+
+
+      </div>
+
+
+
+
+
+
+
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
 
 
   

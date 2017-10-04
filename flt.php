@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html>
+  <script src='https://www.google.com/recaptcha/api.js'></script>
+
 <head>
 <!-- CSS -->	
 <style>
@@ -54,6 +56,12 @@ display: block;
     <label for="pwd">Message</label>
     <textarea type="text" class="form-control" name="msg" required> </textarea>
   </div>
+
+   <div class="form-group">
+<div class="g-recaptcha" data-sitekey="6LfN8TEUAAAAALT8vRgcDDwRDg9vxJztgu8dCaDa"></div>
+   
+  </div>
+
   
   <button type="submit" class="btn btn-default" name="submit">Submit</button>
 
@@ -63,12 +71,43 @@ display: block;
 
    </form>
 
-   <?php
-   if (isset($_POST['submit']))
+  <?php
 
-    {
+if (isset($_POST['submit'])) {
+    function post_captcha($user_response) {
+        $fields_string = '';
+        $fields = array(
+            'secret' => '6LfN8TEUAAAAAC6w7WHOMtAzUjgOHczP4Iv86zit',
+            'response' => $user_response
+        );
+        foreach($fields as $key=>$value)
+        $fields_string .= $key . '=' . $value . '&';
+        $fields_string = rtrim($fields_string, '&');
 
-      $name = $_POST['name'];
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://www.google.com/recaptcha/api/siteverify');
+        curl_setopt($ch, CURLOPT_POST, count($fields));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, True);
+
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        return json_decode($result, true);
+    }
+
+    // Call the function post_captcha
+    $res = post_captcha($_POST['g-recaptcha-response']);
+
+    if (!$res['success']) {
+        // What happens when the CAPTCHA wasn't checked
+       echo "<script>alert('Please go back and make sure you check the security CAPTCHA box.')</script>"; 
+       
+    } else {
+        // If CAPTCHA is successfully completed...
+
+        // Paste mail function or whatever else you want to happen here!
+        $name = $_POST['name'];
       $phone = $_POST['phone'];
       $msg = $_POST['msg'];
      
@@ -76,13 +115,13 @@ display: block;
 
        $from= "from: Callback_Elecbits@elecbits.in";
 
-       if( mail("saurav.rav67@gmail.com", "Project", $messgage, $from) && mail("elecbits16@gmail.com", "Project", $messgage, $from)  ) 
+       if( mail("saurav.rav67@gmail.com", "Project", $messgage, $from) && mail("elecbits16@gmail.com", "Callback", $messgage, $from)  ) 
       {  
            echo "<script>alert('Your response has been added. Your response is important to us.')</script>";  
       }  
 
-   }
-
+    }
+}
 
 ?>
 

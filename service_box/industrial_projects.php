@@ -179,6 +179,10 @@
 
          
         </div>
+ <div layout-gt-sm="row">
+<div class="g-recaptcha" data-sitekey="6LfN8TEUAAAAALT8vRgcDDwRDg9vxJztgu8dCaDa"></div>
+                 
+        </div>
 
 
 
@@ -214,6 +218,39 @@
 
   if (isset($_POST['update1'])) {
 
+function post_captcha($user_response) {
+        $fields_string = '';
+        $fields = array(
+            'secret' => '6LfN8TEUAAAAAC6w7WHOMtAzUjgOHczP4Iv86zit',
+            'response' => $user_response
+        );
+        foreach($fields as $key=>$value)
+        $fields_string .= $key . '=' . $value . '&';
+        $fields_string = rtrim($fields_string, '&');
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://www.google.com/recaptcha/api/siteverify');
+        curl_setopt($ch, CURLOPT_POST, count($fields));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, True);
+
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        return json_decode($result, true);
+    }
+
+    // Call the function post_captcha
+    $res = post_captcha($_POST['g-recaptcha-response']);
+
+    if (!$res['success']) {
+        // What happens when the CAPTCHA wasn't checked
+       echo "<script>alert('Please go back and make sure you check the security CAPTCHA box.')</script>"; 
+  
+    } else {
+        // If CAPTCHA is successfully completed...
+
+        // Paste mail function or whatever else you want to happen here!
     $ip= getIp();
  $promocode = $_POST['promocode']; 
    
@@ -233,7 +270,7 @@
   
 
 
-// echo  "$ip, $name, $sys, $mailid, $range, $contact1, $loc ,  $ddate1, $title1 ,  $desc, $promocode ";
+//echo  "$ip, $name, $sys, $mailid, $range, $contact1, $loc ,  $ddate1, $title1 ,  $desc, $promocode ";
 
    $msg = "$ip, $name, $sys, $mailid, $range, $contact1,   $loc,  $ddate1, $title1 ,  $desc, $promocode ";
 
@@ -254,10 +291,41 @@ if( mail("saurav.rav67@gmail.com", "Project", $msg, $from) && mail("elecbits16@g
 
 
 
+    }
+ 
+
 
 
 
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
 ?>

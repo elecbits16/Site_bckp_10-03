@@ -147,7 +147,7 @@ include("includes/db.php");
         <div class="container">
           <div class="row" style="padding: 0px 50px 0px 50px;"> 
             <div class="col-sm-6 job-card">
-             <span class="job-title" style="font-weight: 900;"><strong> Embedded Electronics Intern </strong></span>
+             <span class="job-title" style="font-weight: 900;"><strong> Arduino Engineer </strong></span>
 
             <div class="job-location">Positions- <strong>2</strong></div>
           <div class="job-location">New Delhi</div><br>
@@ -218,7 +218,7 @@ include("includes/db.php");
 
       <div class="modal-body">
         <h4 class="modal-title">Job Title/Designation</h4>
-        <div class="modal-2">Embedded Electronics Intern</div><br>
+        <div class="modal-2">Arduino Engineer</div><br>
 
         <h4 class="modal-title">Experience</h4>
         <div class="modal-2">Must be experienced in struggling and failing while trying new innovations. We want a passionate person, who never quits.

@@ -42,7 +42,7 @@
           </div> </a>
           
 
-          <a href="need_project.php"><div class="info-box bg-yellow">
+          <a href="services.php"><div class="info-box bg-yellow">
             <span class="info-box-icon"><i class="ion ion-ios-pricetag-outline"></i></span>
 
             <div class="info-box-content">
@@ -123,7 +123,7 @@
             <div class="icon">
               <i class="ion ion-person-add"></i>
             </div>
-            <a href="need_project.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="services.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
         <!-- ./col -->

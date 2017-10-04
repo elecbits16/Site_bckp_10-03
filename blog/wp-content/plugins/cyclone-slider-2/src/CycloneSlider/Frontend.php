@@ -86,7 +86,7 @@ class CycloneSlider_Frontend {
                 'allow_wrap'       => null,
                 'dynamic_height'   => null,
                 'delay'            => null,
-                'swipe'            => null,
+                'swipe'            => true, // TODO: Proper fix for swipe
                 'width_management' => null
             ),
             $shortcode_settings,
@@ -97,8 +97,8 @@ class CycloneSlider_Frontend {
         $slider      = $this->data->get_slider_by_slug( $slider_slug ); // Get slider by slug
 
         // Abort if slider not found!
-        if ( $slider === false ) {
-            return sprintf( __( '[Slideshow "%s" not found]', 'cyclone-slider-2' ), $slider_slug );
+        if ( $slider === NULL ) {
+            return sprintf( __( '[Slideshow "%s" not found]', 'cycloneslider' ), $slider_slug );
         }
 
         $slider_count   = ++ $this->slider_count; // Make each call to shortcode unique
@@ -106,15 +106,15 @@ class CycloneSlider_Frontend {
 
 
         // Assign important variables
-        $admin_settings = isset( $slider['slider_settings'] ) ? $slider['slider_settings'] : array(); // Assign slider settings
-        $slides         = isset( $slider['slides'] ) ? $slider['slides'] : array(); // Assign slides
+        // $slider_settings = $slider['slider_settings'];
+        // $slides = $slider['slides'];
+        $admin_settings = $slider['slider_settings']; // Assign slider settings
+        $slides         = $slider['slides']; // Assign slides
 
         $template_name = $admin_settings['template'];
         $view_file     = $this->data->get_view_file( $template_name );
-
-
         if ( $view_file === false ) { // Abort if template not found!
-            return sprintf( __( '[Template "%s" not found]', 'cyclone-slider-2' ), $template_name );
+            return sprintf( __( '[Template "%s" not found]', 'cycloneslider' ), $template_name );
         }
 
         $slider_settings = $this->data->combine_slider_settings( $admin_settings, $shortcode_settings );
@@ -125,18 +125,20 @@ class CycloneSlider_Frontend {
         $youtube_count = 0; // Number of youtube slides
         $vimeo_count   = 0; // Number of Vimeo slides
 
+        // Remove hidden slides
         foreach ( $slides as $i => $slide ) {
             if ( $slides[ $i ]['hidden'] ) {
                 unset( $slides[ $i ] );
             }
         }
+
         // Do some last minute logic
         // Translations and counters
         foreach ( $slides as $i => $slide ) {
 
             $slides[ $i ]['title']                 = __( $slide['title'] ); // Needed by some translation plugins to work
             $slides[ $i ]['description']           = __( $slide['description'] ); // Needed by some translation plugins to work
-            $slides[ $i ]['slide_data_attributes'] = $this->data->slide_data_attributes( $slide, $slider_settings );
+            $slides[ $i ]['slide_data_attributes'] = $this->data->slide_data_attributes( $slide, $slider );
 
             if ( $slides[ $i ]['type'] == 'image' ) {
 
@@ -175,9 +177,14 @@ class CycloneSlider_Frontend {
                 $vimeo_count ++;
                 $vimeo_id = $this->vimeo->get_vimeo_id( $slides[ $i ]['vimeo_url'] );
 
-                $slides[ $i ]['vimeo_embed_code'] = '<iframe id="' . $slider_html_id . '-iframe-' . $i . '" width="' . $slider_settings['width'] . '" height="' . $slider_settings['height'] . '" src="http://player.vimeo.com/video/' . $vimeo_id . '?api=1&wmode=transparent" frameborder="0"  webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
+                $slides[ $i ]['vimeo_embed_code'] = '<iframe id="' . $slider_html_id . '-iframe-' . $i . '" width="' . $slider_settings['width'] . '" height="' . $slider_settings['height'] . '" src="https://player.vimeo.com/video/' . $vimeo_id . '?wmode=transparent" frameborder="0"  webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
                 $slides[ $i ]['vimeo_id']         = $vimeo_id;
                 $slides[ $i ]['thumbnail_small']  = $this->vimeo->get_vimeo_thumb( $vimeo_id );
+            } else if ( $slides[ $i ]['type'] == 'testimonial' ) {
+                list( $full_image_url, $orig_width, $orig_height ) = wp_get_attachment_image_src( $slide['testimonial_img'],
+                    'full' );
+
+                $slides[ $i ]['testimonial_img_url'] = $slides[ $i ]['full_testimonial_img_url'] = $full_image_url;
             }
         }
 
@@ -185,6 +192,7 @@ class CycloneSlider_Frontend {
         if ( $slider_settings['random'] ) {
             shuffle( $slides ); // Randomizing happens in php not in cycle2
         }
+
         // Make this available in templates regardless
         $slider_settings['random'] = ( $slider_settings['random'] == 1 ) ? true : false; // Convert from int to bool
 
@@ -210,8 +218,8 @@ class CycloneSlider_Frontend {
         $vars['custom_count']    = $custom_count;
         $vars['youtube_count']   = $youtube_count;
         $vars['vimeo_count']     = $vimeo_count;
-        $vars['slider_id']       = $slider_slug; //TODO: (Deprecated since 2.6.0, use $slider_html_id instead) Unique string to identify the slideshow.
-        $vars['slider_metas']    = $slides; //TODO: (Deprecated since 2.5.5, use $slides instead) An array containing slides properties.
+        // $vars['slider_id']       = $slider_slug; //TODO: (Deprecated since 2.6.0, use $slider_html_id instead) Unique string to identify the slideshow.
+        // $vars['slider_metas']    = $slides; //TODO: (Deprecated since 2.5.5, use $slides instead) An array containing slides properties.
         $vars['slider_settings'] = $slider_settings;
 
         $current_view_folder = $this->view->get_view_folder(); // Back it up

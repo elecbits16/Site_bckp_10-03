@@ -32,32 +32,32 @@ class CycloneSlider_Importer {
 	public function import( $uploaded_zip ){
 		// Check zip support
 		if( !class_exists('ZipArchive') ){
-			throw new Exception( __('Could not read zip files. ZipArchive not supported.', 'cyclone-slider-2'), 1);
+			throw new Exception( __('Could not read zip files. ZipArchive not supported.', 'cycloneslider'), 1);
 		}
 		
 		// Check zip
 		if( !is_file( $uploaded_zip ) ){
-			throw new Exception( __('No zip file found.', 'cyclone-slider-2'), 1);
+			throw new Exception( __('No zip file found.', 'cycloneslider'), 1);
 		}
 		
 		// Create imports dir
 		if( is_dir( $this->imports_dir ) == false ){
 			if( ! mkdir( $this->imports_dir, 0777, true ) ){
-				throw new Exception( __('Error creating imports directory.', 'cyclone-slider-2'), 2);
+				throw new Exception( __('Error creating imports directory.', 'cycloneslider'), 2);
 			}
 		}
 		
 		// Move uploaded zip and rename it
 		$zip_file = $this->imports_dir.'/'.$this->zip_name;
 		if ( ! move_uploaded_file( $uploaded_zip, $zip_file ) ){
-			throw new Exception( __('Error moving uploaded zip.', 'cyclone-slider-2'), 3);
+			throw new Exception( __('Error moving uploaded zip.', 'cycloneslider'), 3);
 		}
 		
 		// Open zip and perform checks
 		$zip = new ZipArchive();
 		$zip_result = $zip->open( $zip_file, ZipArchive::CHECKCONS);
 		if( true !== $zip_result ){
-			throw new Exception( sprintf( __('Error opening zip: %s', 'cyclone-slider-2'), $this->get_zip_error( $zip_result ) ), 4);
+			throw new Exception( sprintf( __('Error opening zip: %s', 'cycloneslider'), $this->get_zip_error( $zip_result ) ), 4);
 		}
 
 		// Security checks
@@ -70,38 +70,38 @@ class CycloneSlider_Importer {
 				if($name === 'export.json') {
 					$export_json_found = true;
 					if( null === json_decode($entry) ){  // Not a valid JSON
-						throw new Exception( sprintf( __('Security error. Invalid %s file.', 'cyclone-slider-2'), $name ) );
+						throw new Exception( sprintf( __('Security error. Invalid %s file.', 'cycloneslider'), $name ) );
 					}
 				} else {
 					$im = @imagecreatefromstring( $entry );
 					if(false !== $im){
 						imagedestroy($im);
 					} else { // Not an image
-						throw new Exception( sprintf( __('Security error. File %s is not an image.', 'cyclone-slider-2'), $name ) );
+						throw new Exception( sprintf( __('Security error. File %s is not an image.', 'cycloneslider'), $name ) );
 					}
 				}
 			}
 		}
 		if(!$export_json_found) {
-			throw new Exception( sprintf( __('Security error. Missing %s file.', 'cyclone-slider-2'), 'export.json' ) );
+			throw new Exception( sprintf( __('Security error. Missing %s file.', 'cycloneslider'), 'export.json' ) );
 		}
 
 		// Extract zip to extraction dir
 		$extraction_dir = $this->imports_extracts_dir;
 		if( $zip->extractTo( $extraction_dir ) === false ){
-			throw new Exception( __('Error extracting zip.', 'cyclone-slider-2'), 5);
+			throw new Exception( __('Error extracting zip.', 'cycloneslider'), 5);
 		}
 		$zip->close();
 		
 		// Read export file from extraction dir
 		$json_file = $extraction_dir.'/'.$this->export_json_file;
 		if( ($export_string = file_get_contents( $json_file )) === false ){
-			throw new Exception( __('Failed to read export JSON.', 'cyclone-slider-2'), 6);
+			throw new Exception( __('Failed to read export JSON.', 'cycloneslider'), 6);
 		}
 		
 		// Decode JSON
 		if( ($export_data = json_decode($export_string, true)) == false ) {
-			throw new Exception( __('Failed to decode JSON.', 'cyclone-slider-2'), 7);
+			throw new Exception( __('Failed to decode JSON.', 'cycloneslider'), 7);
 		}
 
 		// Add images to wp uploads dir and add as attachment
@@ -172,7 +172,7 @@ class CycloneSlider_Importer {
 	private function unique_name( $image_name, $target_folder){
 		$target_folder_files = scandir($target_folder);
 		if( false === $target_folder_files ){
-			throw new Exception( sprintf( __('scandir failed on %s', 'cyclone-slider-2'), $target_folder), 8 );
+			throw new Exception( sprintf( __('scandir failed on %s', 'cycloneslider'), $target_folder), 8 );
 		}
 		
 		return $this->increment_name( $image_name, $target_folder_files); // Append numbers if file exist
@@ -188,11 +188,11 @@ class CycloneSlider_Importer {
 	*/
 	private function copy_image( $src_image_file, $dest_image_file ){
 		if( ! file_exists($src_image_file) ){
-			throw new Exception( sprintf( __('Source image %s not found.', 'cyclone-slider-2'), $src_image_file ), 9);
+			throw new Exception( sprintf( __('Source image %s not found.', 'cycloneslider'), $src_image_file ), 9);
 		}
 		
 		if( ! copy($src_image_file, $dest_image_file) ){
-			throw new Exception( __('Copy error.', 'cyclone-slider-2'), 10);
+			throw new Exception( __('Copy error.', 'cycloneslider'), 10);
 		}
 	}
 	
